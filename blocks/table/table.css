@@ -1,0 +1,59 @@
+/* Table block: bordered data table matching the source article tables
+   (figure.wp-block-table: 1px solid #222 cell borders, 0.5em padding,
+   body-size text, regular-weight header row) */
+.table.block {
+  margin: 22px 0 33px;
+}
+
+.table .table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table .table-scroll:focus-visible {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+.table table {
+  width: 100%;
+
+  /* force horizontal scroll inside the region instead of crushing columns on mobile */
+  min-width: calc(var(--table-columns, 2) * 150px);
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: var(--body-font-size-m);
+  line-height: 1.5;
+  color: var(--text-color);
+}
+
+.table table th,
+.table table td {
+  padding: 0.5em;
+  border: 1px solid var(--text-color);
+  text-align: start;
+  vertical-align: middle;
+  overflow-wrap: break-word;
+}
+
+.table table th {
+  font-weight: 400;
+}
+
+.table table th p,
+.table table td p {
+  margin: 0;
+  line-height: inherit;
+}
+
+.table table td p + p {
+  margin-top: 0.25em;
+}
+
+@media (width >= 600px) {
+  .table table {
+    min-width: 0;
+  }
+}

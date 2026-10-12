@@ -33,6 +33,30 @@
             {
               "name": "Highlight",
               "value": "highlight"
+            },
+            {
+              "name": "Light Purple",
+              "value": "light-purple"
+            },
+            {
+              "name": "Article",
+              "value": "article"
+            },
+            {
+              "name": "Disclaimer",
+              "value": "disclaimer"
+            },
+            {
+              "name": "Light Grey",
+              "value": "light-grey"
+            },
+            {
+              "name": "Dark",
+              "value": "dark"
+            },
+            {
+              "name": "Centered",
+              "value": "centered"
             }
           ]
         }
@@ -50,7 +74,21 @@
         "hero",
         "cards",
         "columns",
-        "fragment"
+        "fragment",
+        "hero-split",
+        "columns-promo",
+        "cards-article",
+        "cards-category",
+        "hero-newsletter",
+        "columns-product",
+        "columns-actions",
+        "embed",
+        "hero-category",
+        "filter-article",
+        "columns-aside",
+        "cards-media",
+        "embed-marketo",
+        "table"
       ]
     }
   ]

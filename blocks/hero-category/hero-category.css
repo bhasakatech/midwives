@@ -1,0 +1,98 @@
+/* hero-category: category intro banner — values from source #category-header .category-header.row */
+
+.hero-category {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 62px;
+  color: var(--text-color);
+}
+
+.hero-category .hero-category-content {
+  min-width: 0;
+}
+
+.hero-category .hero-category-content h1 {
+  margin: 0 0 40px;
+  font-size: var(--heading-size-xxl);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+
+.hero-category .hero-category-content p {
+  margin: 0;
+  font-size: 22px;
+  line-height: 28px;
+}
+
+/* source separates intro paragraphs with an empty 28px <p>&nbsp;</p> (dropped by decorate) */
+.hero-category .hero-category-content p + p {
+  margin-top: 28px;
+}
+
+/* stacked (below 1200px): illustration above the text, left aligned at natural size */
+.hero-category .hero-category-media {
+  order: -1;
+  line-height: 0;
+}
+
+.hero-category .hero-category-media picture {
+  display: block;
+}
+
+.hero-category .hero-category-media img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* section: breadcrumb sits flush under the header; next band follows the block directly */
+main > .section.hero-category-container {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* breadcrumb paragraph (default content preceding the block) — source p#breadcrumbs */
+main > .section.hero-category-container > .default-content-wrapper:first-child > p:first-child {
+  margin: 0 0 20px;
+  padding: 40px 0 10px;
+  color: var(--text-color);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+main > .section.hero-category-container > .default-content-wrapper:first-child > p:first-child a:any-link {
+  padding-right: 10px;
+  color: var(--link-color);
+}
+
+/* source: .col-xl-7 text | .col-xl-5 illustration, 12px column gutters, top aligned */
+@media (width >= 1200px) {
+  /* Bootstrap-style row: negative margins cancel the column gutters so the text
+     aligns with the section container edge, as on the source */
+  .hero-category {
+    flex-direction: row;
+    align-items: flex-start;
+    margin: 0 -12px;
+  }
+
+  .hero-category .hero-category-content,
+  .hero-category .hero-category-media {
+    box-sizing: border-box;
+    padding: 0 12px;
+  }
+
+  .hero-category .hero-category-content {
+    flex: 0 0 58.3333%;
+  }
+
+  .hero-category .hero-category-media {
+    order: 0;
+    flex: 0 0 41.6667%;
+  }
+
+  .hero-category.hero-category-no-media .hero-category-content {
+    flex-basis: 100%;
+  }
+}

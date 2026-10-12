@@ -1,0 +1,250 @@
+/* cards-article: recent-articles grid (promo tile + article teasers)
+ * Values extracted from source .recent-article-fluid > .container > .row (computed styles). */
+
+.cards-article > ul {
+  list-style: none;
+  margin: 0;
+  padding: 20px 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px 24px;
+  color: var(--text-color);
+}
+
+.cards-article > ul > li {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cards-article .cards-article-card-image,
+.cards-article .cards-article-card-image p {
+  margin: 0;
+  line-height: 0;
+}
+
+.cards-article .cards-article-card-body > * {
+  margin: 0;
+}
+
+/* ---------- article teaser ---------- */
+
+.cards-article .cards-article-teaser .cards-article-card-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+  aspect-ratio: 416 / 257;
+  object-fit: cover;
+  vertical-align: middle;
+}
+
+.cards-article .cards-article-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* category links: purple uppercase, light-violet comma separators */
+.cards-article .cards-article-categories {
+  min-height: 33px;
+  padding: 5px 0 10px;
+  font-size: 22px;
+  line-height: 33px;
+  color: rgb(159 158 201);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* zero-width text node keeps the 33px line box strut when there is no comma separator */
+.cards-article .cards-article-categories::before {
+  content: "\200b";
+}
+
+.cards-article .cards-article-categories a:any-link {
+  font-family: var(--bold-font-family);
+  font-size: 14px;
+
+  /* bold face is a separate family on source; fallback stack needs explicit weight */
+  font-weight: 700;
+  line-height: 22px;
+  text-transform: uppercase;
+  color: var(--brand-purple);
+}
+
+/* title (source h5 22px; authored as h3) */
+.cards-article .cards-article-card-body .cards-article-title {
+  margin: 0 0 8px;
+  font-family: var(--body-font-family);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 26.4px;
+  color: var(--text-color);
+}
+
+.cards-article .cards-article-title a:any-link {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 60px;
+  font-size: 22px;
+  line-height: 30px;
+  color: var(--brand-grey);
+}
+
+/* "Voir l'article ->" */
+.cards-article .cards-article-link {
+  min-height: 33px;
+  line-height: 33px;
+}
+
+.cards-article .cards-article-link a:any-link {
+  font-size: 16px;
+  line-height: 30px;
+  color: var(--brand-purple);
+}
+
+/* date (left) + article type badge (right) */
+.cards-article .cards-article-card-body .cards-article-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 33px;
+  margin-top: auto;
+  line-height: 33px;
+}
+
+.cards-article .cards-article-date {
+  min-width: 0;
+  margin-top: 10px;
+  font-family: var(--bold-font-family);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 22px;
+  color: var(--text-color);
+}
+
+.cards-article .cards-article-type:any-link {
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 6px;
+  padding: 3px 30px 3px 10px;
+  border-radius: 10px;
+  background-color: var(--brand-purple);
+  font-family: var(--bold-font-family);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 15px;
+  text-transform: uppercase;
+  color: var(--brand-white);
+}
+
+/* round icon cap (source: 26px Font Awesome circle, 4px left margin) */
+.cards-article .cards-article-type::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 39px;
+  transform: translateY(-50%);
+  background: var(--brand-purple) no-repeat center / 10px 10px
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none' stroke='%23fff' stroke-width='1'%3E%3Crect x='.5' y='1.5' width='9' height='7' rx='1'/%3E%3Cpath d='M2 3.5h3M2 5h6M2 6.5h6'/%3E%3C/svg%3E");
+}
+
+.cards-article .cards-article-type[href*="/videos/"]::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none' stroke='%23fff' stroke-width='1'%3E%3Ccircle cx='5' cy='5' r='4.5'/%3E%3Cpath d='M4 3.2v3.6L6.8 5z' fill='%23fff' stroke='none'/%3E%3C/svg%3E");
+}
+
+.cards-article .cards-article-type:hover,
+.cards-article .cards-article-type:focus-visible {
+  color: var(--brand-white);
+  text-decoration: none;
+}
+
+/* ---------- promo tile ---------- */
+
+.cards-article > ul > li.cards-article-promo {
+  align-self: start;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 65px 55px;
+  background-color: var(--brand-purple);
+  color: var(--brand-white);
+  text-align: center;
+}
+
+.cards-article .cards-article-promo .cards-article-card-image img {
+  display: inline;
+  width: auto;
+  max-width: 100%;
+
+  /* source renders the 154x173 icon at 107x120 */
+  height: 120px;
+}
+
+.cards-article .cards-article-promo .cards-article-card-body {
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.cards-article .cards-article-promo .cards-article-card-body h3 {
+  margin: 0;
+  padding: 20px 0;
+  font-family: var(--bold-font-family);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 33px;
+  color: var(--brand-white);
+}
+
+.cards-article .cards-article-promo .cards-article-cta {
+  margin: 12px 0 0;
+
+  /* source inline-block CTA sits on a 33px line box, leaving 11px below it */
+  padding-bottom: 11px;
+  line-height: 22px;
+}
+
+main .cards-article .cards-article-promo .cards-article-cta a:any-link {
+  display: inline-block;
+  margin: 0;
+  padding: 14px 17px;
+  border: 0;
+  border-radius: 3px;
+  background-color: var(--brand-white);
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--brand-purple);
+  text-decoration: none;
+  transition: box-shadow 0.2s;
+}
+
+main .cards-article .cards-article-promo .cards-article-cta a:hover,
+main .cards-article .cards-article-promo .cards-article-cta a:focus-visible {
+  color: var(--brand-purple);
+  box-shadow: rgb(50 50 93 / 10%) 0 0 0 1px inset, rgb(50 50 93 / 20%) 0 6px 15px 0, rgb(0 0 0 / 10%) 0 2px 2px 0;
+  text-decoration: none;
+}
+
+/* ---------- layout ---------- */
+
+@media (width >= 600px) {
+  .cards-article > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 1200px) {
+  .cards-article > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

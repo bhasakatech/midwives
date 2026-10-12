@@ -1,0 +1,87 @@
+/* filter-article: "Filtrer les articles par" label + article-type select above the cards-article grid */
+.filter-article {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 20px 0 10px;
+  color: var(--text-color);
+}
+
+.filter-article[hidden] {
+  display: none;
+}
+
+.filter-article .filter-article-label {
+  display: block;
+  margin: 0 20px 0 0;
+  color: var(--brand-grey);
+  font-family: var(--body-font-family);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 30px;
+}
+
+.filter-article .filter-article-control {
+  position: relative;
+  width: 210px;
+  height: 38px;
+  cursor: pointer;
+}
+
+.filter-article .filter-article-select {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  height: 38px;
+  margin: 0;
+  padding: 7px 30px 7px 16px;
+  border: 0;
+  border-radius: 4px;
+  background-color: var(--brand-purple);
+  color: var(--brand-white);
+  font-family: "GE Inspira Italic", var(--body-font-family);
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 24px;
+  appearance: none;
+  cursor: pointer;
+}
+
+.filter-article .filter-article-select:active {
+  background-color: var(--brand-purple);
+}
+
+.filter-article .filter-article-select:focus-visible {
+  outline: 2px solid var(--brand-purple-dark);
+  outline-offset: 2px;
+}
+
+/* native dropdown list (source custom list: white panel, purple text) */
+.filter-article .filter-article-select option {
+  background-color: var(--brand-white);
+  color: #443c81;
+  font-style: normal;
+  font-weight: 400;
+}
+
+/* dropdown caret: 5px white down-triangle, 17px from top, 16px from right */
+.filter-article .filter-article-control::after {
+  content: "";
+  position: absolute;
+  top: 17px;
+  right: 16px;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-top-color: var(--brand-white);
+  pointer-events: none;
+}
+
+@media (width >= 600px) {
+  .filter-article {
+    flex-direction: row;
+    align-items: stretch;
+    margin-bottom: 20px;
+  }
+}

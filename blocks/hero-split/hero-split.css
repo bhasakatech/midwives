@@ -1,0 +1,158 @@
+/* full-bleed: drop the section content max-width / gutters */
+.hero-split-container .hero-split-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+.hero-split {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--brand-purple-light);
+}
+
+/* text column */
+.hero-split .hero-split-content {
+  box-sizing: border-box;
+  padding: 20px 5%;
+}
+
+.hero-split .hero-split-content > * {
+  margin-top: 0;
+}
+
+/* wordmark (source omits it on the mobile slide) */
+.hero-split .hero-split-content p.hero-split-logo {
+  display: none;
+  margin: 0;
+  line-height: 0;
+}
+
+.hero-split .hero-split-logo img {
+  display: block;
+  width: 80%;
+  max-width: 100%;
+  height: auto;
+}
+
+/* tagline */
+.hero-split .hero-split-content h1 {
+  margin: 0;
+  padding: 34px 0 24px;
+  font-family: var(--bold-font-family);
+  font-size: 20px;
+
+  /* source face "GE Inspira Bold" is a bold cut; 700 keeps the Arial fallback visually bold */
+  font-weight: 700;
+  line-height: 28px;
+  color: var(--brand-purple);
+}
+
+/* description */
+.hero-split .hero-split-content p {
+  margin: 10px 0 20px;
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--text-color);
+}
+
+/* CTA (authored as a plain link, styled as the source purple button) */
+.hero-split .hero-split-content p.hero-split-cta {
+  display: flow-root;
+  margin: 0;
+  line-height: 0;
+}
+
+main .hero-split .hero-split-cta a:any-link {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  margin: 12px 0 0;
+  border: 0;
+  border-radius: 3px;
+  padding: 14px 17px;
+  background-color: var(--brand-purple);
+  color: var(--brand-white);
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: center;
+  text-decoration: none;
+}
+
+main .hero-split .hero-split-cta a:hover,
+main .hero-split .hero-split-cta a:focus-visible {
+  background-color: var(--brand-purple-dark);
+  color: var(--brand-white);
+  text-decoration: none;
+}
+
+/* photo column with the source purple gradient overlay */
+.hero-split .hero-split-media {
+  position: relative;
+  order: -1;
+  line-height: 0;
+}
+
+.hero-split .hero-split-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(360deg, rgb(89 81 148 / 46.7%) 0%, rgb(201 167 219 / 25%) 100%);
+  pointer-events: none;
+}
+
+.hero-split .hero-split-media picture,
+.hero-split .hero-split-media img {
+  display: block;
+  width: 100%;
+}
+
+.hero-split .hero-split-media img {
+  height: auto;
+}
+
+@media (width >= 900px) {
+  .hero-split {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  /* source: col-md-6 (50% + 12px gutter) holding a 70%-wide centred text box */
+  .hero-split .hero-split-content {
+    flex: 0 0 calc(50% + 12px);
+    padding: 20px calc(7.5% + 22.2px) 20px calc(7.5% - 1.8px);
+  }
+
+  .hero-split .hero-split-content p.hero-split-logo {
+    display: block;
+  }
+
+  .hero-split .hero-split-content p.hero-split-cta {
+    padding-bottom: 11px;
+  }
+
+  main .hero-split .hero-split-cta a:any-link {
+    display: inline-block;
+    width: auto;
+  }
+
+  .hero-split .hero-split-media {
+    flex: 1 1 0;
+    order: 0;
+    align-self: stretch;
+  }
+
+  .hero-split .hero-split-media img {
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+@media (width >= 1200px) {
+  /* source desktop slide: text box vertically centred with no extra padding */
+  .hero-split .hero-split-content {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}

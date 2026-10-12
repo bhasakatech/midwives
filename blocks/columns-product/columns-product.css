@@ -1,0 +1,143 @@
+/* columns-product: product cut-out image | eyebrow, name, subtitle, description, CTA, note
+ * Values from source computed styles (section.product-container > div.products-image):
+ * bootstrap row with col-sm-4 | col-sm-8 (12px gutters), CTA in col-lg-9.
+ */
+
+/* source block padding is 50px at every width (global light-grey uses 30px on mobile) */
+main .section.light-grey.columns-product-container {
+  padding: 50px 0;
+}
+
+.columns-product .columns-product-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns-product .columns-product-row > div {
+  order: 1;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* image column: first on mobile, image at natural size, left aligned */
+.columns-product .columns-product-img-col {
+  order: 0;
+  line-height: 0;
+  text-align: start;
+}
+
+.columns-product .columns-product-img-col picture {
+  display: block;
+}
+
+.columns-product .columns-product-img-col img {
+  display: inline-block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+}
+
+/* text column */
+.columns-product .columns-product-text-col > * {
+  margin: 0;
+}
+
+.columns-product .columns-product-text-col p {
+  font-size: 15px;
+  line-height: 21px;
+  color: #727275;
+}
+
+.columns-product .columns-product-text-col .columns-product-eyebrow {
+  margin: 0 0 20px;
+  font-family: var(--heading-font-family);
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+
+.columns-product .columns-product-title {
+  margin: 0 0 8px;
+  font-size: var(--heading-size-xxl);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--brand-purple);
+}
+
+.columns-product .columns-product-text-col .columns-product-subtitle {
+  margin: 20px 0;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+
+.columns-product .columns-product-text-col .columns-product-cta {
+  margin: 48px 0;
+}
+
+/* CTA: full-width pill button (bootstrap btn-block btn-primary) */
+main .columns-product a.columns-product-cta-link:any-link {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  margin: 0;
+  border: 1px solid var(--brand-purple);
+  border-radius: 20px;
+  padding: 6px 12px;
+  background-color: var(--brand-purple);
+  color: var(--brand-white);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: normal;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+main .columns-product a.columns-product-cta-link:hover,
+main .columns-product a.columns-product-cta-link:focus-visible {
+  border-color: #443c81;
+  background-color: #443c81;
+  color: var(--brand-white);
+  text-decoration: none;
+}
+
+@media (width >= 600px) {
+  /* bootstrap row: -12px gutters around 12px-padded columns */
+  .columns-product .columns-product-row {
+    flex-direction: row;
+    margin: 0 -12px;
+  }
+
+  .columns-product .columns-product-row > div {
+    order: unset;
+    flex: 1 1 0;
+    padding: 0 12px;
+  }
+
+  /* source layout: image col-sm-4 | text col-sm-8 */
+  .columns-product.columns-product-2-cols .columns-product-row > div:first-child {
+    flex: 0 0 calc(100% * 4 / 12);
+  }
+
+  .columns-product.columns-product-2-cols .columns-product-row > div:last-child {
+    flex: 0 0 calc(100% * 8 / 12);
+  }
+}
+
+@media (width >= 900px) {
+  /* section content box already matches the source row width (wrapper has 24px padding) */
+  .columns-product .columns-product-row {
+    margin: 0;
+  }
+
+  /* CTA sits in a col-lg-9 of a nested gutter row */
+  main .columns-product a.columns-product-cta-link:any-link {
+    width: calc((100% + 24px) * 0.75 - 24px);
+  }
+}

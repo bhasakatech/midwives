@@ -1,0 +1,88 @@
+/*
+ * embed: full content-width video embed.
+ * Default mirrors the source Gutenberg embed (figure.wp-block-embed): 100% wide, fixed 440px
+ * high at every viewport, figure margin 22px 0 plus the 11px inline-iframe line gap below
+ * (33px bottom). Collapses with the article's 33px paragraph margin above.
+ */
+.embed {
+  width: 100%;
+  margin: 22px 0 33px;
+}
+
+.embed.embed-pending,
+.embed .embed-frame,
+.embed .embed-placeholder {
+  position: relative;
+  width: 100%;
+  height: 440px;
+}
+
+.embed .embed-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* placeholder poster + play button */
+.embed .embed-placeholder {
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.embed .embed-placeholder picture,
+.embed .embed-placeholder img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.embed .embed-placeholder-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 72px;
+  height: 72px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgb(0 0 0 / 60%);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.embed .embed-placeholder-play::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  border-left: 22px solid #fff;
+  transform: translate(-35%, -50%);
+}
+
+.embed .embed-placeholder-play:hover,
+.embed .embed-placeholder-play:focus-visible {
+  background-color: var(--brand-purple);
+}
+
+.embed .embed-placeholder-play:focus-visible {
+  outline: 3px solid var(--brand-purple);
+  outline-offset: 3px;
+}
+
+/* widescreen: source .embed-container (older webinar pages) -- 16:9, no margin */
+.embed.widescreen {
+  margin: 0;
+}
+
+.embed.widescreen.embed-pending,
+.embed.widescreen .embed-frame,
+.embed.widescreen .embed-placeholder {
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
