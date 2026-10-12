@@ -1,0 +1,15 @@
+
+{
+  "mappings": [
+    "/content/midwives/:/",
+    "/content/midwives/configuration:/.helix/config.json",
+    "/content/midwives/metadata:/metadata.json",
+    "/content/midwives/index/spreadsheet:/products.json",
+    "/content/midwives/index/tag-configuration:/tag-configuration.json",
+    "/content/dam/midwives/:/"
+  ],
+  "includes": [
+    "/content/midwives/",
+    "/content/dam/midwives/"
+  ]
+}
