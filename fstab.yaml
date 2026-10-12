@@ -1,5 +1,5 @@
 mountpoints:
   /:
-    url: "https://author-p139816-e1420456.adobeaemcloud.com/bin/franklin.delivery/bhasakatech/gehc-midwives/main"
+    url: "https://author-p139816-e1420456.adobeaemcloud.com/bin/franklin.delivery/bhasakatech/midwives/main"
     type: "markup"
     suffix: ".html"
