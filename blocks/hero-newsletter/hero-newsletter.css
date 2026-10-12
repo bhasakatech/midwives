@@ -1,0 +1,156 @@
+/* full-bleed block, flush against the preceding (light-purple) section */
+main > .section.hero-newsletter-container {
+  margin: 0;
+}
+
+.hero-newsletter-container .hero-newsletter-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+/* mobile / tablet: solid purple band, no photo (matches source below 1200px) */
+.hero-newsletter {
+  position: relative;
+  background-color: var(--brand-purple);
+  color: var(--brand-white);
+  font-size: 22px;
+  line-height: 33px;
+}
+
+.hero-newsletter .hero-newsletter-background {
+  display: none;
+  line-height: 0;
+}
+
+.hero-newsletter .hero-newsletter-inner {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 24px;
+}
+
+.hero-newsletter .hero-newsletter-content {
+  box-sizing: border-box;
+  padding: 40px 0;
+  background-color: var(--brand-purple);
+  color: var(--brand-white);
+}
+
+.hero-newsletter .hero-newsletter-content p {
+  margin: 0;
+  color: var(--brand-white);
+}
+
+/* eyebrow: short white rule above the "MISE À JOUR" label */
+.hero-newsletter .hero-newsletter-content .hero-newsletter-eyebrow {
+  margin-bottom: 21px;
+  font-family: var(--bold-font-family);
+  font-size: 14px;
+  line-height: 21px;
+
+  /* bold face is a separate family on source; fallback stack needs explicit weight */
+  font-weight: 700;
+}
+
+.hero-newsletter .hero-newsletter-eyebrow::before {
+  content: "";
+  display: block;
+  width: 38px;
+  height: 2px;
+  margin-bottom: 9px;
+  background-color: var(--brand-white);
+}
+
+.hero-newsletter .hero-newsletter-content .hero-newsletter-text {
+  margin-bottom: 33px;
+  font-family: var(--bold-font-family);
+  font-size: 22px;
+  line-height: 33px;
+}
+
+.hero-newsletter .hero-newsletter-content .hero-newsletter-cta {
+  margin-bottom: 33px;
+}
+
+.hero-newsletter .hero-newsletter-cta a:any-link {
+  box-sizing: border-box;
+  display: inline-block;
+  max-width: 100%;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 3px;
+  padding: 14px 17px;
+  background-color: var(--brand-white);
+  color: var(--brand-purple);
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow 0.2s;
+}
+
+.hero-newsletter .hero-newsletter-cta a:hover,
+.hero-newsletter .hero-newsletter-cta a:focus-visible {
+  color: var(--brand-purple);
+  box-shadow: rgb(50 50 93 / 10%) 0 0 0 1px inset, rgb(50 50 93 / 20%) 0 6px 15px 0, rgb(0 0 0 / 10%) 0 2px 2px 0;
+  text-decoration: none;
+}
+
+.hero-newsletter .hero-newsletter-content .hero-newsletter-legal {
+  margin-bottom: 15px;
+  font-size: 10px;
+  line-height: 15px;
+}
+
+@media (width >= 900px) {
+  .hero-newsletter .hero-newsletter-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 12px;
+  }
+}
+
+/* desktop: full-bleed photo, purple panel at right overlapping the previous section */
+@media (width >= 1200px) {
+  .hero-newsletter {
+    padding-bottom: 25px;
+    background-color: transparent;
+  }
+
+  .hero-newsletter .hero-newsletter-background {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .hero-newsletter .hero-newsletter-background picture,
+  .hero-newsletter .hero-newsletter-background img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-newsletter .hero-newsletter-background img {
+    object-fit: cover;
+    object-position: 0 0;
+  }
+
+  .hero-newsletter .hero-newsletter-inner {
+    z-index: 1;
+    display: flex;
+    justify-content: flex-end;
+    max-width: 1320px;
+  }
+
+  .hero-newsletter .hero-newsletter-content {
+    position: relative;
+    display: flow-root;
+    top: -100px;
+    width: calc(100% / 3);
+    padding: 40px 25px;
+  }
+}

@@ -1,20 +1,120 @@
-footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
+/* footer layout — mobile first (stacked, centered), desktop 3-column row from 1200px (matches source) */
+
+/*
+ * Metric fallback for systems without Arial (e.g. Linux with only DejaVu Sans):
+ * DejaVu Sans is ~20% wider than GE Inspira Sans. Same scaling as the header.
+ */
+@font-face {
+  font-family: gehc-dejavu-fallback;
+  size-adjust: 82%;
+  src: local('DejaVu Sans');
 }
 
-footer .footer > div {
-  margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
+/* full-bleed band: 1px border + 30px padding top/bottom, light lavender */
+footer {
+  box-sizing: border-box;
+  padding: 30px 12px;
+  border-top: 1px solid rgb(0 0 0 / 16%);
+  background-color: var(--brand-purple-light);
+  color: var(--brand-purple);
+  font-family: 'GE Inspira Sans', gehc-fallback, gehc-dejavu-fallback, arial, sans-serif;
+}
+
+footer .footer-inner {
+  box-sizing: border-box;
+  max-width: 1320px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+footer .footer-section {
+  padding: 0 12px;
 }
 
 footer .footer p {
   margin: 0;
 }
 
-@media (width >= 900px) {
-  footer .footer > div {
-    padding: 40px 32px 24px;
+footer .footer a:any-link {
+  color: var(--text-color);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+footer .footer a:hover,
+footer .footer a:focus-visible {
+  color: var(--brand-purple);
+  text-decoration: none;
+}
+
+/* contact link */
+footer .footer-section-links {
+  font-size: 18px;
+  line-height: 33px;
+}
+
+/* copyright / legal text */
+footer .footer-section-text p {
+  margin: 50px 0;
+  color: var(--text-color);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* legal links */
+footer .footer-menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 16px links on 33px rows (source: 16px links inside 22px/33px list items) */
+footer .footer-menu li {
+  margin: 0;
+  font-size: 16px;
+  line-height: 33px;
+}
+
+/* logo */
+footer .footer-section > .footer-logo {
+  margin: 40px 0;
+  line-height: 33px;
+}
+
+/* natural size (144x32) on mobile; limited by the 147px column on desktop (123x27) */
+footer .footer-logo img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+@media (width >= 1200px) {
+  /* 2 / 6 / 4 columns of a 12-column 1320px row, vertically centered */
+  footer .footer-inner {
+    display: grid;
+    grid-template-columns: 2fr 6fr 4fr;
+    align-items: center;
+    text-align: left;
+  }
+
+  footer .footer-section-text p {
+    margin: 0;
+  }
+
+  /* legal list (8/12) + logo (4/12, right aligned) */
+  footer .footer-section-menu {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: center;
+    padding: 0;
+  }
+
+  footer .footer-section-menu > * {
+    padding: 0 12px;
+  }
+
+  footer .footer-section-menu > .footer-logo {
+    margin: 0;
+    text-align: right;
   }
 }

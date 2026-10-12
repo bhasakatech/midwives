@@ -1,0 +1,376 @@
+/* embed-marketo: hosted Marketo Forms 2.0 form, centered narrow column */
+
+/* Marketo renders its own camelCase classes (.mktoForm, .mktoField, ...) that we must target */
+/* stylelint-disable selector-class-pattern */
+
+/* --- block --- */
+.embed-marketo {
+  max-width: 700px;
+  margin: 0 12px;
+}
+
+.embed-marketo [hidden] {
+  display: none !important;
+}
+
+/* reserve space while the lazy Marketo script loads (limits layout shift) */
+.embed-marketo:not([data-marketo-state="ready"], [data-marketo-state="failed"]) .embed-marketo-form {
+  min-height: 400px;
+}
+
+/* --- Marketo form layout overrides (Marketo injects inline widths) --- */
+.embed-marketo .mktoForm {
+  width: 100% !important;
+  padding: 0 !important;
+  color: #333 !important;
+  font-family: var(--body-font-family) !important;
+  font-size: 13px !important;
+}
+
+.embed-marketo .mktoForm .mktoFormRow {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.embed-marketo .mktoForm .mktoFormCol {
+  flex: 1 1 100%;
+  min-width: 0;
+  float: none !important;
+  margin-bottom: 10px !important;
+}
+
+.embed-marketo .mktoForm .mktoFieldWrap {
+  box-sizing: border-box;
+  width: 100% !important;
+  float: none;
+}
+
+
+/* labels are visually replaced by placeholders (except the opt-in checkbox text) */
+.embed-marketo .mktoForm .mktoFieldWrap:not(:has(.mktoCheckboxList)) > .mktoLabel,
+.embed-marketo .mktoForm .mktoAsterix {
+  display: none !important;
+}
+
+.embed-marketo .mktoForm .mktoField:not([type="checkbox"], [type="radio"]) {
+  box-sizing: border-box;
+  display: block;
+  width: 100% !important;
+  height: 42px;
+  margin: 0;
+  padding: 3px 4px 3px 7px;
+  border: 1px solid rgb(199 200 207);
+  border-radius: 4px;
+  background-color: transparent;
+  box-shadow: none;
+  color: var(--brand-grey);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  line-height: 21px;
+  float: none;
+}
+
+.embed-marketo .mktoForm .mktoFieldWrap select.mktoField {
+  padding-right: 22px;
+}
+
+/* source textarea sits inline, leaving a descender gap below it */
+.embed-marketo .mktoForm .mktoFieldWrap textarea.mktoField {
+  display: inline-block;
+}
+
+.embed-marketo .mktoForm .mktoField::placeholder {
+  color: var(--brand-grey);
+  opacity: 1;
+}
+
+.embed-marketo .mktoForm .mktoField:not([type="checkbox"], [type="radio"]):focus {
+  border-color: rgb(199 200 207);
+}
+
+/* opt-in checkbox row: checkbox first, italic consent text takes the remaining width */
+.embed-marketo .mktoForm .mktoFormCol:has(.mktoCheckboxList) {
+  margin-top: 15px;
+}
+
+.embed-marketo .mktoForm .mktoFieldWrap:has(.mktoCheckboxList) {
+  display: flex;
+  align-items: flex-start;
+}
+
+.embed-marketo .mktoForm .mktoFieldWrap:has(.mktoCheckboxList) .mktoCheckboxList {
+  order: -1;
+  flex: 0 0 20px;
+  box-sizing: border-box;
+  width: 20px !important;
+  margin: 0;
+  padding: 0;
+}
+
+.embed-marketo .mktoForm .mktoFieldWrap:has(.mktoCheckboxList) > .mktoLabel {
+  flex: 1 1 auto;
+  width: auto !important;
+  padding: 0;
+  color: rgb(80 102 125);
+  font-family: arial, helvetica, sans-serif;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 14.4px;
+  text-align: left;
+}
+
+.embed-marketo .mktoForm .mktoCheckboxList input[type="checkbox"] + label::before {
+  top: 1px;
+  margin-left: -16px;
+  box-shadow: none;
+}
+
+/* the form's embedded CSS sets padding-right with !important and #mktoForm_ id selectors;
+   two :not(#no-id) lift this rule above it */
+.embed-marketo .mktoForm:not(#no-id) .mktoFieldWrap:not(#no-id) {
+  padding: 0 !important;
+}
+
+.embed-marketo .mktoForm .mktoOffset,
+.embed-marketo .mktoForm .mktoGutter,
+.embed-marketo .mktoForm .mktoClear {
+  display: none;
+}
+
+/* consent / GDPR rich text */
+.embed-marketo .mktoForm .mktoFormCol:has(.mktoHtmlText) {
+  margin-bottom: 35px !important;
+}
+
+.embed-marketo .mktoForm .mktoHtmlText {
+  width: 100% !important;
+  color: var(--brand-grey);
+  font-family: var(--body-font-family);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.embed-marketo .mktoForm .mktoHtmlText p {
+  margin: 0;
+  padding: 0 12px;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Marketo authored inline link colors, hence !important */
+.embed-marketo .mktoForm .mktoHtmlText a {
+  color: rgb(68 60 129) !important;
+  text-decoration: underline;
+}
+
+.embed-marketo .mktoForm .mktoButtonRow {
+  display: block;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.embed-marketo .mktoForm .mktoButtonWrap {
+  display: block;
+  margin-left: 0 !important;
+}
+
+/* Marketo theme CSS loads after ours with higher specificity, hence !important */
+.embed-marketo .mktoForm .mktoButton {
+  width: 100%;
+  padding: 10px 57px !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+  background: var(--brand-purple) !important;
+  box-shadow: none !important;
+  color: var(--brand-white) !important;
+  font-family: var(--body-font-family) !important;
+  font-size: 16px !important;
+  font-weight: 700;
+  line-height: normal;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.embed-marketo .mktoForm .mktoButton:hover,
+.embed-marketo .mktoForm .mktoButton:focus-visible {
+  background: var(--brand-purple-dark) !important;
+}
+
+/* thank-you message + fallback */
+.embed-marketo .embed-marketo-thanks {
+  margin: 10px 0;
+  padding: 40px;
+  background-color: var(--brand-purple);
+  color: var(--brand-white);
+  font-size: 22px;
+  line-height: 33px;
+  text-align: center;
+}
+
+.embed-marketo .embed-marketo-fallback {
+  text-align: center;
+}
+
+.embed-marketo .embed-marketo-thanks:focus {
+  outline: none;
+}
+
+/* --- gated option: professional check panel --- */
+.embed-marketo.gated {
+  max-width: none;
+}
+
+.embed-marketo.gated .embed-marketo-form {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.embed-marketo .embed-marketo-gate {
+  padding: 30px;
+  border: 1px solid rgb(68 60 129);
+  background: rgb(246 245 254);
+  text-align: center;
+}
+
+.embed-marketo .embed-marketo-gate-text {
+  padding-top: 16px;
+}
+
+.embed-marketo .embed-marketo-gate-text > * {
+  margin: 0 0 8px;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.embed-marketo .embed-marketo-gate-text > :last-child {
+  margin-bottom: 0;
+  font-size: 22px;
+  line-height: 33px;
+}
+
+.embed-marketo .embed-marketo-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 53px;
+}
+
+.embed-marketo .embed-marketo-gate-actions .button {
+  margin: 0;
+}
+
+.embed-marketo .embed-marketo-gate-actions .button.primary {
+  border-width: 0;
+}
+
+.embed-marketo .embed-marketo-gate-actions .button.primary:hover,
+.embed-marketo .embed-marketo-gate-actions .button.primary:focus-visible {
+  box-shadow: rgb(50 50 93 / 10%) 0 0 0 1px inset, rgb(50 50 93 / 20%) 0 6px 15px 0, rgb(0 0 0 / 10%) 0 2px 2px 0;
+}
+
+.embed-marketo .embed-marketo-gate-actions a.button.secondary:any-link {
+  border-color: rgb(29 92 181);
+  background-color: rgb(230 230 230);
+  color: rgb(159 158 201);
+  font-family: var(--body-font-family);
+}
+
+/* --- section default content (page title + subtitle above the form) --- */
+main .section.embed-marketo-container {
+  padding: 50px 0 15px;
+}
+
+main .section.embed-marketo-container > div {
+  padding: 0 12px;
+}
+
+main .section.embed-marketo-container .default-content-wrapper > * {
+  margin-inline: 12px;
+}
+
+main .section.embed-marketo-container .default-content-wrapper > h1 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 36px;
+  line-height: 1.2;
+}
+
+main .section.embed-marketo-container .default-content-wrapper > h2 {
+  margin-top: 0;
+  margin-bottom: 33px;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+/* source renders the first line ("Devenez membre") in bold */
+main .section.embed-marketo-container .default-content-wrapper > h2::first-line {
+  font-weight: 700;
+}
+
+main .section.embed-marketo-container .default-content-wrapper > p {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 20px;
+  line-height: 30px;
+}
+
+main .section.embed-marketo-container .default-content-wrapper > :last-child {
+  margin-bottom: 50px;
+}
+
+@media (width >= 600px) {
+  .embed-marketo {
+    margin: 0 auto;
+  }
+
+  .embed-marketo .mktoForm .mktoFormCol {
+    flex: 1 1 0;
+    margin-bottom: 30px !important;
+  }
+
+  .embed-marketo .mktoForm .mktoFormCol:has(.mktoCheckboxList) {
+    margin-top: -5px;
+    margin-bottom: 10px !important;
+  }
+
+  .embed-marketo .mktoForm:not(#no-id) .mktoFieldWrap:not(#no-id) {
+    padding-right: 15px !important;
+  }
+
+  .embed-marketo .mktoForm .mktoHtmlText p {
+    padding: 0;
+  }
+
+  .embed-marketo .mktoForm .mktoField:not([type="checkbox"], [type="radio"]) {
+    height: 53px;
+    padding: 3px 4px 3px 15px;
+  }
+
+  .embed-marketo .mktoForm .mktoButtonWrap {
+    display: inline;
+  }
+
+  .embed-marketo .mktoForm .mktoButton {
+    width: auto;
+  }
+
+  .embed-marketo.gated {
+    margin: 0 12px;
+  }
+}
+
+@media (width >= 900px) {
+  main .section.embed-marketo-container > div {
+    padding: 0 24px;
+  }
+
+  /* source centers this content in a 9/12 (75%) column */
+  main .section.embed-marketo-container .default-content-wrapper > *,
+  .embed-marketo.gated {
+    margin-inline: calc(12.5% + 12px);
+  }
+}

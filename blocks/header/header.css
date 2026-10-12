@@ -1,52 +1,45 @@
-/* header and nav layout */
+/* header and nav layout — mobile first, desktop header from 1200px (matches source) */
+
+/*
+ * Metric fallback for systems without Arial (e.g. Linux with only DejaVu Sans):
+ * DejaVu Sans is ~20% wider than GE Inspira Sans, which makes the three menu
+ * labels overflow their column. Scaled so label widths match the source.
+ */
+@font-face {
+  font-family: gehc-dejavu-fallback;
+  size-adjust: 82%;
+  src: local('DejaVu Sans');
+}
+
+body > header {
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  height: auto;
+  min-height: var(--nav-height);
+}
+
+/* header bar (source mobile: 74px = 20px padding + 33px row + 20px padding + 1px border) */
 header .nav-wrapper {
-  background-color: var(--background-color);
+  position: relative;
+  box-sizing: border-box;
   width: 100%;
-  z-index: 2;
-  position: fixed;
+  padding: 20px 0;
+  background-color: var(--background-color);
+  border-bottom: 1px solid rgb(0 0 0 / 16%);
 }
 
 header nav {
   box-sizing: border-box;
   display: grid;
   grid-template:
-    'hamburger brand tools' var(--nav-height)
-    'sections sections sections' 1fr / auto 1fr auto;
+    'brand search hamburger' 33px
+    'tools tools tools' auto / 1fr auto auto;
   align-items: center;
-  gap: 0 24px;
-  margin: auto;
-  max-width: 1248px;
-  height: var(--nav-height);
-  padding: 0 24px;
-  font-family: var(--body-font-family);
-}
-
-header nav[aria-expanded='true'] {
-  grid-template:
-    'hamburger brand' var(--nav-height)
-    'sections sections' 1fr
-    'tools tools' var(--nav-height) / auto 1fr;
-  overflow-y: auto;
-  min-height: 100dvh;
-}
-
-@media (width >= 900px) {
-  header .nav-wrapper {
-    position: relative;
-  }
-
-  header nav {
-    display: flex;
-    justify-content: space-between;
-    gap: 0 32px;
-    max-width: 1264px;
-    padding: 0 32px;
-  }
-
-  header nav[aria-expanded='true'] {
-    min-height: 0;
-    overflow: visible;
-  }
+  margin: 0 auto;
+  padding: 0 24px 0 12px;
+  font-family: 'GE Inspira Sans', gehc-fallback, gehc-dejavu-fallback, arial, sans-serif;
+  color: var(--text-color);
 }
 
 header nav p {
@@ -54,219 +47,518 @@ header nav p {
   line-height: 1;
 }
 
-header nav a:any-link {
-  color: currentcolor;
+header nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* hamburger */
-header nav .nav-hamburger {
-  grid-area: hamburger;
+header nav a:any-link {
+  color: currentcolor;
+  text-decoration: none;
+}
+
+header nav button {
+  font-family: inherit;
+}
+
+/* brand */
+header nav .nav-brand {
+  grid-area: brand;
+  padding: 0 12px;
+  font-size: 22px;
+  line-height: 33px;
+  color: var(--brand-purple);
+}
+
+header nav .nav-brand p {
+  line-height: inherit;
+}
+
+header nav .nav-brand img {
+  width: 144px;
+  height: 32px;
+}
+
+/* magnifier glyph (source: Font Awesome fa-search, purple) */
+header nav .nav-search-icon {
+  display: block;
+  width: 22px;
   height: 22px;
+  background-color: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='10' cy='10' r='7.5' fill='none' stroke='black' stroke-width='2.6'/%3E%3Cpath d='M15.6 15.6 22 22' stroke='black' stroke-width='2.8' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* mobile search toggle */
+header nav .nav-search-toggle {
+  grid-area: search;
   display: flex;
   align-items: center;
+  height: 33px;
+}
+
+header nav .nav-search-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 33px;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--brand-purple);
+  cursor: pointer;
+}
+
+/* hamburger (source: Font Awesome bars, 19px bold, purple; no morph on open) */
+header nav .nav-hamburger {
+  grid-area: hamburger;
+  display: flex;
+  align-items: center;
+  height: 33px;
+  margin-left: 29px;
 }
 
 header nav .nav-hamburger button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
   height: 22px;
   margin: 0;
   border: 0;
   border-radius: 0;
   padding: 0;
-  background-color: var(--background-color);
-  color: inherit;
-  overflow: initial;
-  text-overflow: initial;
-  white-space: initial;
+  background: transparent;
+  color: var(--brand-purple);
+  cursor: pointer;
+}
+
+header nav .nav-hamburger button:focus {
+  color: var(--brand-purple-dark);
 }
 
 header nav .nav-hamburger-icon,
 header nav .nav-hamburger-icon::before,
 header nav .nav-hamburger-icon::after {
-  box-sizing: border-box;
   display: block;
+  width: 17px;
+  height: 2.5px;
+  border-radius: 1px;
+  background: currentcolor;
+}
+
+header nav .nav-hamburger-icon {
   position: relative;
-  width: 20px;
 }
 
 header nav .nav-hamburger-icon::before,
 header nav .nav-hamburger-icon::after {
   content: '';
   position: absolute;
-  background: currentcolor;
+  left: 0;
 }
 
-header nav[aria-expanded='false'] .nav-hamburger-icon,
-header nav[aria-expanded='false'] .nav-hamburger-icon::before,
-header nav[aria-expanded='false'] .nav-hamburger-icon::after {
-  height: 2px;
-  border-radius: 2px;
-  background: currentcolor;
-}
-
-header nav[aria-expanded='false'] .nav-hamburger-icon::before {
+header nav .nav-hamburger-icon::before {
   top: -6px;
 }
 
-header nav[aria-expanded='false'] .nav-hamburger-icon::after {
+header nav .nav-hamburger-icon::after {
   top: 6px;
 }
 
-header nav[aria-expanded='true'] .nav-hamburger-icon {
-  height: 22px;
+/* menu panel (source .mobile-navi: slides down under the header, full width, 100vh) */
+header nav .nav-sections {
+  display: none;
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 0;
+  right: 0;
+  z-index: 99;
+  box-sizing: border-box;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: var(--background-color);
 }
 
-header nav[aria-expanded='true'] .nav-hamburger-icon::before,
-header nav[aria-expanded='true'] .nav-hamburger-icon::after {
-  top: 3px;
-  left: 1px;
+header nav .nav-sections.is-expanded {
+  display: block;
+}
+
+header nav .nav-list {
+  margin: 65px 40px 33px;
+}
+
+header nav .nav-list > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 11px;
+  padding: 0 0 25px;
+}
+
+header nav a.nav-sub-link {
+  display: block;
+  padding-left: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+  color: #50667d;
+}
+
+header nav a.nav-link {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+  color: var(--brand-purple);
+}
+
+/* disclosure chevron (source: Font Awesome chevron-down / chevron-up icon swap) */
+header nav .nav-drop-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 25px;
+  margin: 0 8px 0 4px;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+header nav .nav-drop-toggle::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin-top: -5px;
+  border-right: 1.5px solid currentcolor;
+  border-bottom: 1.5px solid currentcolor;
   transform: rotate(45deg);
-  transform-origin: 2px 1px;
-  width: 24px;
-  height: 2px;
-  border-radius: 2px;
 }
 
-header nav[aria-expanded='true'] .nav-hamburger-icon::after {
-  top: unset;
-  bottom: 3px;
-  transform: rotate(-45deg);
+header nav .nav-drop.is-open > .nav-drop-toggle::before {
+  margin-top: 5px;
+  transform: rotate(225deg);
 }
 
+/* accordion sub-list */
+header nav .nav-sub-menu {
+  display: none;
+  flex-basis: 100%;
+}
+
+header nav .nav-sub-menu.is-expanded {
+  display: block;
+}
+
+header nav .nav-sub-menu > li {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 0 10px 15px;
+}
+
+/* hollow bullet (source: Font Awesome circle, 10px, #222) */
+header nav .nav-sub-menu > li::before {
+  content: '';
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  margin-top: 8.5px;
+  border: 1.5px solid var(--text-color);
+  border-radius: 50%;
+}
+
+/* tools: search bar row (mobile) / utility links + search (desktop) */
+header nav .nav-tools {
+  grid-area: tools;
+  display: none;
+  margin-left: 12px;
+  padding: 16px 0;
+}
+
+header nav .nav-tools.is-expanded {
+  display: block;
+}
+
+header nav .nav-utility {
+  display: none;
+}
+
+header nav .nav-search {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+header nav .nav-search-label,
+header nav .nav-search-submit .nav-search-icon {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+header nav .nav-search input {
+  box-sizing: border-box;
+  display: block;
+  width: 230px;
+  height: 36px;
+  margin: 0;
+  border: 1px solid rgb(159 158 201);
+  border-radius: 0;
+  padding: 3px 3px 3px 15px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgb(159 158 201);
+}
+
+header nav .nav-search input::placeholder {
+  color: rgb(159 158 201);
+  opacity: 1;
+}
+
+header nav .nav-search input:focus {
+  outline: none;
+}
+
+header nav .nav-search input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+header nav .nav-search-submit {
+  box-sizing: border-box;
+  width: 71px;
+  height: 36px;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 6px 22px 8.8px;
+  background: rgb(159 158 201);
+  font-size: 22px;
+  line-height: 21px;
+  color: var(--background-color);
+  cursor: pointer;
+}
+
+/* tablet (source: from 768px search row right-aligned, wider input, hamburger 98px from icon) */
 @media (width >= 900px) {
   header nav .nav-hamburger {
-    display: none;
-    visibility: hidden;
+    margin-left: 98px;
+  }
+
+  header nav .nav-search {
+    justify-content: flex-end;
+  }
+
+  header nav .nav-search input {
+    width: 250px;
   }
 }
 
-/* brand */
-header .nav-brand {
-  grid-area: brand;
-  flex-basis: 128px;
-  font-size: var(--heading-font-size-s);
-  font-weight: 700;
-  line-height: 1;
-}
-
-header nav .nav-brand img {
-  width: 128px;
-  height: auto;
-}
-
-/* sections */
-header nav .nav-sections {
-  grid-area: sections;
-  flex: 1 1 auto;
-  display: none;
-  visibility: hidden;
-}
-
-header nav[aria-expanded='true'] .nav-sections {
-  display: block;
-  visibility: visible;
-  align-self: start;
-}
-
-header nav .nav-sections ul {
-  list-style: none;
-  padding-left: 0;
-  font-size: var(--body-font-size-s);
-}
-
-header nav .nav-sections ul > li {
-  font-weight: 500;
-}
-
-header nav .nav-sections ul > li > ul {
-  margin-top: 0;
-}
-
-header nav .nav-sections ul > li > ul > li {
-  font-weight: 400;
-}
-
-@media (width >= 900px) {
-  header nav .nav-sections {
-    display: block;
-    visibility: visible;
-    white-space: nowrap;
+/* desktop */
+@media (width >= 1200px) {
+  header .nav-wrapper {
+    padding: 20px 12px;
   }
 
-  header nav[aria-expanded='true'] .nav-sections {
-    align-self: unset;
-  }
-
-  header nav .nav-sections .nav-drop {
-    position: relative;
-    padding-right: 16px;
-    cursor: pointer;
-  }
-
-  header nav .nav-sections .nav-drop::after {
-    content: '';
-    display: inline-block;
-    position: absolute;
-    top: 0.5em;
-    right: 2px;
-    transform: rotate(135deg);
-    width: 6px;
-    height: 6px;
-    border: 2px solid currentcolor;
-    border-radius: 0 1px 0 0;
-    border-width: 2px 2px 0 0;
-  }
-
-  header nav .nav-sections .nav-drop[aria-expanded='true']::after {
-    top: unset;
-    bottom: 0.5em;
-    transform: rotate(315deg);
-  }
-
-  header nav .nav-sections ul {
+  header nav {
     display: flex;
-    gap: 24px;
+    align-items: center;
+    gap: 0;
+    max-width: 1320px;
+    height: 90px;
+    padding: 0;
+  }
+
+  header nav .nav-hamburger,
+  header nav .nav-search-toggle {
+    display: none;
+  }
+
+  header nav .nav-brand {
+    flex: 0 0 16.6667%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 0 12px;
+  }
+
+  header nav .nav-sections,
+  header nav .nav-sections.is-expanded {
+    display: block;
+    position: static;
+    flex: 0 0 58.3333%;
+    min-width: 0;
+    box-sizing: border-box;
+    height: auto;
+    overflow: visible;
+    padding: 20px 12px 0;
+    background-color: transparent;
+  }
+
+  header nav .nav-list {
+    display: flex;
     margin: 0;
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li {
-    flex: 0 1 auto;
+  header nav .nav-list > li {
     position: relative;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    height: 25px;
+    margin-bottom: 0;
+    padding: 0 3px;
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li > ul {
+  header nav .nav-list > .nav-mobile-only {
     display: none;
-    position: relative;
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
+  header nav a.nav-sub-link {
+    padding-left: 0;
+    font-weight: 400;
+    line-height: 24px;
+    color: var(--text-color);
+  }
+
+  header nav a.nav-link {
+    display: block;
+    white-space: nowrap;
+    font-weight: 400;
+    line-height: 24px;
+    color: var(--text-color);
+  }
+
+  header nav a.nav-sub-link:hover,
+  header nav a.nav-link:hover {
+    color: var(--brand-purple);
+  }
+
+  header nav .nav-drop.is-open > .nav-drop-toggle::before {
+    margin-top: -5px;
+    transform: rotate(45deg);
+  }
+
+  /* dropdown panel: parked off-screen when closed, like the source */
+  header nav .nav-sub-menu,
+  header nav .nav-sub-menu.is-expanded {
     display: block;
     position: absolute;
-    left: -24px;
-    width: 200px;
-    top: 150%;
-    padding: 16px;
-    background-color: var(--light-color);
-    white-space: initial;
+    top: 25px;
+    left: -99999px;
+    z-index: 100;
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid rgb(0 0 0 / 16%);
+    padding: 40px 10px 10px;
+    background-color: var(--background-color);
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li > ul::before {
-    content: '';
+  header nav .nav-drop.is-open > .nav-sub-menu,
+  header nav .nav-drop:hover > .nav-sub-menu {
+    left: 3px;
+  }
+
+  header nav .nav-sub-menu > li {
+    display: block;
+    margin-bottom: 11px;
+    padding: 0 3px 10px;
+  }
+
+  header nav .nav-sub-menu > li::before {
+    display: none;
+  }
+
+  header nav .nav-tools,
+  header nav .nav-tools.is-expanded {
+    display: flex;
+    flex: 0 0 25%;
+    flex-direction: column;
+    align-items: flex-end;
+    align-self: stretch;
+    min-width: 0;
+    box-sizing: border-box;
+    margin-left: 0;
+    padding: 0 12px;
+  }
+
+  header nav .nav-utility {
+    display: flex;
+    height: 33px;
+  }
+
+  header nav .nav-utility li {
+    padding-left: 20px;
+    font-size: 22px;
+    line-height: 33px;
+  }
+
+  header nav a.nav-utility-link {
+    font-size: 16px;
+    line-height: 22px;
+    color: var(--brand-purple);
+  }
+
+  header nav a.nav-utility-link:hover {
+    color: var(--brand-purple-dark);
+    text-decoration: underline;
+  }
+
+  header nav .nav-search {
+    display: block;
+    position: relative;
+    width: 294px;
+    max-width: 100%;
+    margin-top: 10px;
+  }
+
+  header nav .nav-search input {
+    width: 100%;
+    border: 1px solid #c7c8cf;
+    border-radius: 4px;
+    padding: 5px 70px 5px 15px;
+    color: var(--brand-grey);
+    transition: width 0.4s;
+  }
+
+  header nav .nav-search-submit {
     position: absolute;
-    top: -8px;
-    left: 16px;
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid var(--light-color);
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 70px;
+    padding: 0 12px 0 0;
+    background: transparent;
+    color: var(--brand-purple);
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li > ul > li {
-    padding: 8px 0;
+  header nav .nav-search-submit .nav-search-icon {
+    position: static;
+    width: 20px;
+    height: 20px;
+    overflow: visible;
+    clip-path: none;
   }
-}
 
-/* tools */
-header nav .nav-tools {
-  grid-area: tools;
+  header nav .nav-search-submit-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }

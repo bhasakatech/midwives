@@ -15,13 +15,69 @@
       "hero",
       "cards",
       "columns",
-      "fragment"
+      "fragment",
+      "hero-split",
+      "columns-promo",
+      "cards-article",
+      "cards-category",
+      "hero-newsletter",
+      "columns-product",
+      "columns-actions",
+      "embed",
+      "hero-category",
+      "filter-article",
+      "columns-aside",
+      "cards-media",
+      "embed-marketo",
+      "table"
+    ]
+  },
+  {
+    "id": "cards-article",
+    "components": [
+      "cards-article-card"
+    ]
+  },
+  {
+    "id": "cards-category",
+    "components": [
+      "cards-category-card"
+    ]
+  },
+  {
+    "id": "cards-media",
+    "components": [
+      "cards-media-card"
     ]
   },
   {
     "id": "cards",
     "components": [
       "card"
+    ]
+  },
+  {
+    "id": "columns-actions",
+    "components": [
+      "column"
+    ]
+  },
+  {
+    "id": "columns-aside",
+    "components": [
+      "column"
+    ]
+  },
+  {
+    "id": "columns-product",
+    "components": [
+      "column"
+    ]
+  },
+  {
+    "id": "columns-promo",
+    "components": [
+      "column"
     ]
   },
   {
@@ -37,6 +93,30 @@
       "image",
       "button",
       "title"
+    ]
+  },
+  {
+    "id": "table",
+    "components": [
+      "table-row"
+    ]
+  },
+  {
+    "id": "table-2-columns",
+    "components": [
+      "table-col-2"
+    ]
+  },
+  {
+    "id": "table-3-columns",
+    "components": [
+      "table-col-3"
+    ]
+  },
+  {
+    "id": "table-4-columns",
+    "components": [
+      "table-col-4"
     ]
   }
 ]

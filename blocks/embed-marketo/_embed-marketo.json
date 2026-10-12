@@ -1,0 +1,114 @@
+{
+  "definitions": [
+    {
+      "title": "Embed Marketo",
+      "id": "embed-marketo",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Embed Marketo",
+              "model": "embed-marketo",
+              "key-value": true,
+              "munchkinId": "005-SHS-767",
+              "baseUrl": "//landing1.gehealthcare.com",
+              "gateYesLabel": "Oui",
+              "gateNoLabel": "Non"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "embed-marketo",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "formId",
+          "value": "",
+          "label": "Marketo Form ID",
+          "required": true
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "munchkinId",
+          "value": "005-SHS-767",
+          "label": "Munchkin ID"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "baseUrl",
+          "value": "//landing1.gehealthcare.com",
+          "label": "Marketo base URL"
+        },
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "thankYou",
+          "value": "",
+          "label": "Thank-you message"
+        },
+        {
+          "component": "aem-content",
+          "valueType": "string",
+          "name": "fallback",
+          "label": "Fallback link (optional)"
+        },
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "gateMessage",
+          "value": "",
+          "label": "Professional check text (gated option)"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "gateYesLabel",
+          "value": "Oui",
+          "label": "Professional check: yes label (gated option)"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "gateNoLabel",
+          "value": "Non",
+          "label": "Professional check: no label (gated option)"
+        },
+        {
+          "component": "aem-content",
+          "valueType": "string",
+          "name": "gateNoUrl",
+          "label": "Professional check: no URL (gated option)"
+        },
+        {
+          "component": "select",
+          "name": "classes",
+          "value": "",
+          "label": "Options",
+          "options": [
+            {
+              "name": "Default",
+              "value": ""
+            },
+            {
+              "name": "Gated content",
+              "value": "gated"
+            },
+            {
+              "name": "Configurator",
+              "value": "configurator"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

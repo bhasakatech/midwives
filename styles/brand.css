@@ -1,0 +1,40 @@
+/* Brand tokens extracted from https://midwives.gehealthcare.com/ (Bloom by GE HealthCare) */
+:root {
+  /* brand colors */
+  --brand-purple: #6022a6;
+  --brand-purple-dark: #411771;
+  --brand-purple-light: #f4f1f8;
+  --brand-grey: #5b5b67;
+  --brand-white: #fff;
+
+  /* fonts — GE Inspira Sans is not on Adobe Fonts / Google Fonts; falls back to Arial */
+  --heading-font-family: "GE Inspira Sans", gehc-fallback, arial, sans-serif;
+  --body-font-family: "GE Inspira Sans", gehc-fallback, arial, sans-serif;
+  --bold-font-family: "GE Inspira Bold", "GE Inspira Sans", gehc-fallback, arial, sans-serif;
+
+  /* base colors */
+  --background-color: #fff;
+  --text-color: #222;
+  --link-color: var(--brand-purple);
+  --link-hover-color: var(--brand-purple-dark);
+
+  /* spacing */
+  --content-max-width: 1320px;
+  --section-padding: 75px;
+  --nav-height: 74px;
+
+  /* heading sizes (desktop, from source) */
+  --heading-size-xxl: 48px;
+  --heading-size-xl: 36px;
+  --heading-size-l: 28px;
+  --heading-size-m: 24px;
+  --heading-size-s: 22px;
+  --heading-size-xs: 22px;
+}
+
+/* desktop header bar on source is 131px tall (20px padding + 90px row + 1px border) */
+@media (width >= 1200px) {
+  :root {
+    --nav-height: 131px;
+  }
+}

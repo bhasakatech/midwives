@@ -1,0 +1,87 @@
+/* cards-media: grid of media tiles (thumbnail + uppercase caption link).
+ * Source: WordPress .wp-block-columns rows of 3 .gated_videos figures, merged here into one grid.
+ * Source spacing: columns gap 44px, row margin-bottom 38.5px, figure margin 22px 0,
+ * figcaption margin 11px 0 22px. Columns stack to 1 per row on small screens. */
+.cards-media > ul {
+  list-style: none;
+  margin: 60.5px 0; /* figure margin 22px + columns row margin 38.5px */
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 88px 44px; /* stacked: figure 22px + column gap 44px + figure 22px */
+}
+
+.cards-media > ul > li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* thumbnail: rendered at intrinsic 353x198, shrinks with the column */
+.cards-media .cards-media-card-image {
+  line-height: 0;
+}
+
+.cards-media .cards-media-card-image p {
+  margin: 0;
+}
+
+.cards-media .cards-media-card-image a,
+.cards-media .cards-media-card-image picture {
+  display: block;
+}
+
+.cards-media .cards-media-card-image img {
+  display: block;
+  width: 353px;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 353 / 198;
+  object-fit: cover;
+}
+
+/* caption */
+.cards-media .cards-media-card-body {
+  padding-top: 11px;
+  font-size: 22px;
+  line-height: 33px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.cards-media .cards-media-card-body > * {
+  margin: 0;
+}
+
+.cards-media .cards-media-card-body a:any-link {
+  padding: 0 4.125px; /* inline <mark> padding on source */
+  color: var(--brand-purple);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.cards-media .cards-media-card-body a:hover,
+.cards-media .cards-media-card-body a:focus-visible {
+  color: var(--brand-purple-dark);
+  text-decoration: none;
+}
+
+/* whole-card click target: caption link stretched over the tile */
+.cards-media .cards-media-card-linked .cards-media-caption::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.cards-media .cards-media-card-linked:hover .cards-media-caption {
+  color: var(--brand-purple-dark);
+}
+
+@media (width >= 900px) {
+  .cards-media > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 82.5px; /* figure 22px + row margin 38.5px + figure 22px */
+  }
+}

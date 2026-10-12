@@ -1,0 +1,111 @@
+/* columns-promo: poster illustration | heading + download CTA
+ * Values extracted from source .cta-fluid > .container > .row
+ * (section padding 65px top / 50px bottom; EDS section margin supplies 40px of each).
+ */
+.columns-promo {
+  padding: 25px 12px 10px;
+  color: var(--text-color);
+}
+
+.columns-promo .columns-promo-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns-promo .columns-promo-row > div {
+  order: 1;
+  min-width: 0;
+}
+
+/* image column */
+.columns-promo .columns-promo-img-col {
+  order: 0;
+  line-height: 0;
+}
+
+.columns-promo .columns-promo-img-col picture {
+  display: block;
+}
+
+.columns-promo .columns-promo-img-col img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+}
+
+/* text column */
+.columns-promo .columns-promo-text-col {
+  text-align: center;
+}
+
+.columns-promo .columns-promo-text-col h1,
+.columns-promo .columns-promo-text-col h2,
+.columns-promo .columns-promo-text-col h3 {
+  margin: 0 0 8px;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-xxl);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+
+.columns-promo .columns-promo-text-col p {
+  margin: 0;
+}
+
+/* CTA: authored as a plain link (no strong/em), styled as the source purple button */
+.columns-promo .columns-promo-text-col a:any-link {
+  box-sizing: border-box;
+  display: block;
+  margin: 12px 0 0;
+  border: 0;
+  border-radius: 3px;
+  padding: 14px 17px;
+  background-color: var(--brand-purple);
+  color: var(--brand-white);
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.columns-promo .columns-promo-text-col a:hover,
+.columns-promo .columns-promo-text-col a:focus-visible {
+  background-color: var(--brand-purple-dark);
+  color: var(--brand-white);
+  text-decoration: none;
+}
+
+@media (width >= 900px) {
+  .columns-promo {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .columns-promo .columns-promo-row {
+    flex-direction: row;
+  }
+
+  .columns-promo .columns-promo-row > div {
+    order: unset;
+  }
+
+  /* source col-md-5 / col-md-7 split */
+  .columns-promo .columns-promo-img-col {
+    flex: 0 0 calc(100% * 5 / 12);
+  }
+
+  .columns-promo .columns-promo-text-col {
+    flex: 0 0 calc(100% * 7 / 12);
+    padding: 45px 0;
+    text-align: start;
+  }
+
+  .columns-promo .columns-promo-text-col a:any-link {
+    display: inline-block;
+  }
+}

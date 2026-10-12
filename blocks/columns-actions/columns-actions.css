@@ -1,0 +1,69 @@
+/* columns-actions: centred icon-over-link items, intended for a dark section band.
+ * Layout-focused; the band background/text colour comes from the "dark" section style.
+ * Values from source .product_footer: 13px links, 30px-high icons, 33px line boxes,
+ * equal columns with 12px gutters, no hover change.
+ */
+.columns-actions .columns-actions-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns-actions .columns-actions-item {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 12px;
+  text-align: center;
+}
+
+.columns-actions .columns-actions-empty {
+  display: none;
+}
+
+.columns-actions .columns-actions-item p {
+  margin: 0;
+  line-height: 33px;
+}
+
+.columns-actions .columns-actions-link:any-link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--brand-white);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 33px;
+  text-decoration: none;
+}
+
+.columns-actions .columns-actions-link:hover,
+.columns-actions .columns-actions-link:focus-visible {
+  color: var(--brand-white);
+  opacity: 1;
+  text-decoration: none;
+}
+
+.columns-actions .columns-actions-icon {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 33px;
+  line-height: 0;
+}
+
+.columns-actions .columns-actions-icon .icon {
+  display: block;
+  width: auto;
+  height: 30px;
+}
+
+.columns-actions .columns-actions-icon img {
+  display: block;
+  width: auto;
+  height: 30px;
+}
+
+@media (width >= 600px) {
+  .columns-actions .columns-actions-row {
+    flex-direction: row;
+  }
+}

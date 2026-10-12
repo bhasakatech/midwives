@@ -9,7 +9,23 @@ import {
   loadSection,
   loadSections,
   loadCSS,
+  getMetadata,
 } from './aem.js';
+
+/**
+ * Gated articles (page metadata "gated: true") are only shown to visitors who
+ * completed the sign-up form (cookie set by the embed-marketo "gated" block);
+ * everyone else is sent to the sign-up page, as on the original site.
+ * @returns {boolean} true when the visitor is being redirected
+ */
+function redirectIfGated() {
+  if (getMetadata('gated') !== 'true') return false;
+  if (document.cookie.split(';').some((c) => c.trim().startsWith('marketo_success='))) return false;
+  if (window.location.hostname === 'localhost' || document.documentElement.classList.contains('adobe-ue-edit')) return false;
+  const back = `${window.location.pathname}${window.location.search}`;
+  window.location.replace(`/fr-fr/gated-content?ge_redirect=${encodeURIComponent(back)}`);
+  return true;
+}
 
 /**
  * Moves all the attributes from a given elmenet to another given element.
@@ -127,7 +143,8 @@ export function decorateMain(main) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  document.documentElement.lang = 'en';
+  if (redirectIfGated()) return;
+  document.documentElement.lang = 'fr';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
