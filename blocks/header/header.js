@@ -1,3 +1,5 @@
+import { getMetadata, toClassName } from '../../scripts/aem.js';
+
 // media query match that indicates desktop width (source desktop header starts at 1200px)
 const isDesktop = window.matchMedia('(min-width: 1200px)');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -6,17 +8,50 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const SLIDE_DURATION = 400;
 const SLIDE_EASING = 'cubic-bezier(0.37, 0, 0.63, 1)';
 
+const DEFAULT_NAV = '/nav';
+
+// page template (page property "template") -> nav fragment path
+const TEMPLATE_NAVS = {
+  'article-type': '/nav/fragments/nav-article',
+  'ge-product-type': '/nav/fragments/nav-product',
+};
+
 /**
- * Fetches the nav fragment. Metadata-independent dual fetch:
- * /content/nav.plain.html (local aem up) first, then /nav.plain.html (DA/EDS).
+ * Resolves the nav fragment path for the current page:
+ * explicit "nav" metadata, then the page template's nav, then the default nav.
+ * @returns {string} nav fragment path without extension
+ */
+function getNavPath() {
+  const navMeta = getMetadata('nav');
+  if (navMeta) {
+    return new URL(navMeta, window.location).pathname
+      .replace(/^\/content\/midwives(?=\/)/, '')
+      .replace(/\.(plain\.)?html$/, '');
+  }
+  return TEMPLATE_NAVS[toClassName(getMetadata('template'))] || DEFAULT_NAV;
+}
+
+/**
+ * Fetches a fragment: /content{path} (local aem up) first, then {path} (EDS).
+ * @param {string} path fragment path without extension
+ * @returns {Promise<Response|null>} the ok response, or null
+ */
+async function fetchFragment(path) {
+  let resp = await fetch(`/content${path}.plain.html`);
+  if (!resp.ok) resp = await fetch(`${path}.plain.html`);
+  return resp.ok ? resp : null;
+}
+
+/**
+ * Fetches the nav fragment for the current page, falling back to the default nav.
  * Relative image paths are resolved against the fragment URL.
  * @returns {Promise<Element|null>} container holding the fragment sections
  */
 async function fetchNavFragment() {
-  // metadata-independent: /content first (localhost), then root (DA/EDS prod)
-  let resp = await fetch('/content/nav.plain.html');
-  if (!resp.ok) resp = await fetch('/nav.plain.html');
-  if (!resp.ok) return null;
+  const navPath = getNavPath();
+  let resp = await fetchFragment(navPath);
+  if (!resp && navPath !== DEFAULT_NAV) resp = await fetchFragment(DEFAULT_NAV);
+  if (!resp) return null;
 
   const container = document.createElement('div');
   container.innerHTML = await resp.text();

@@ -20,6 +20,31 @@
         "name": "keywords",
         "multi": true,
         "label": "Keywords"
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "template",
+        "label": "Template",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Article",
+            "value": "article-type"
+          },
+          {
+            "name": "Product",
+            "value": "ge-product-type"
+          }
+        ]
+      },
+      {
+        "component": "aem-content",
+        "name": "nav",
+        "label": "Navigation (override)"
       }
     ]
   },
