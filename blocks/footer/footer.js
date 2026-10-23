@@ -1,14 +1,17 @@
+import { getTemplateFragmentPath, fetchFragmentWithFallback } from '../../scripts/scripts.js';
+
+const DEFAULT_FOOTER = '/footer';
+
 /**
- * Fetches the footer fragment. Metadata-independent dual fetch:
- * /content/footer.plain.html (local aem up) first, then /footer.plain.html (DA/EDS).
+ * Fetches the footer fragment for the current page's template (template config sheet),
+ * falling back to the default footer.
  * Relative image paths are resolved against the fragment URL.
  * @returns {Promise<Element|null>} container holding the fragment sections
  */
 async function fetchFooterFragment() {
-  // metadata-independent: /content first (localhost), then root (DA/EDS prod)
-  let resp = await fetch('/content/footer.plain.html');
-  if (!resp.ok) resp = await fetch('/footer.plain.html');
-  if (!resp.ok) return null;
+  const footerPath = await getTemplateFragmentPath('footer', DEFAULT_FOOTER);
+  const resp = await fetchFragmentWithFallback(footerPath, DEFAULT_FOOTER);
+  if (!resp) return null;
 
   const container = document.createElement('div');
   container.innerHTML = await resp.text();

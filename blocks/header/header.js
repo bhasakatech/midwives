@@ -1,4 +1,4 @@
-import { getMetadata, toClassName } from '../../scripts/aem.js';
+import { getTemplateFragmentPath, fetchFragmentWithFallback } from '../../scripts/scripts.js';
 
 // media query match that indicates desktop width (source desktop header starts at 1200px)
 const isDesktop = window.matchMedia('(min-width: 1200px)');
@@ -10,47 +10,15 @@ const SLIDE_EASING = 'cubic-bezier(0.37, 0, 0.63, 1)';
 
 const DEFAULT_NAV = '/nav';
 
-// page template (page property "template") -> nav fragment path
-const TEMPLATE_NAVS = {
-  'article-type': '/nav/fragments/nav-article',
-  'ge-product-type': '/nav/fragments/nav-product',
-};
-
 /**
- * Resolves the nav fragment path for the current page:
- * explicit "nav" metadata, then the page template's nav, then the default nav.
- * @returns {string} nav fragment path without extension
- */
-function getNavPath() {
-  const navMeta = getMetadata('nav');
-  if (navMeta) {
-    return new URL(navMeta, window.location).pathname
-      .replace(/^\/content\/midwives(?=\/)/, '')
-      .replace(/\.(plain\.)?html$/, '');
-  }
-  return TEMPLATE_NAVS[toClassName(getMetadata('template'))] || DEFAULT_NAV;
-}
-
-/**
- * Fetches a fragment: /content{path} (local aem up) first, then {path} (EDS).
- * @param {string} path fragment path without extension
- * @returns {Promise<Response|null>} the ok response, or null
- */
-async function fetchFragment(path) {
-  let resp = await fetch(`/content${path}.plain.html`);
-  if (!resp.ok) resp = await fetch(`${path}.plain.html`);
-  return resp.ok ? resp : null;
-}
-
-/**
- * Fetches the nav fragment for the current page, falling back to the default nav.
+ * Fetches the nav fragment for the current page's template (template config sheet),
+ * falling back to the default nav.
  * Relative image paths are resolved against the fragment URL.
  * @returns {Promise<Element|null>} container holding the fragment sections
  */
 async function fetchNavFragment() {
-  const navPath = getNavPath();
-  let resp = await fetchFragment(navPath);
-  if (!resp && navPath !== DEFAULT_NAV) resp = await fetchFragment(DEFAULT_NAV);
+  const navPath = await getTemplateFragmentPath('nav', DEFAULT_NAV);
+  const resp = await fetchFragmentWithFallback(navPath, DEFAULT_NAV);
   if (!resp) return null;
 
   const container = document.createElement('div');

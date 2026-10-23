@@ -10,7 +10,74 @@ import {
   loadSections,
   loadCSS,
   getMetadata,
+  toClassName,
 } from './aem.js';
+
+// author-managed sheet mapping a page template to its fragments (columns: template, nav, footer)
+const TEMPLATE_CONFIG_PATH = '/template-config.json';
+let templateConfigPromise;
+
+/**
+ * Loads the template config sheet once per page view.
+ * @returns {Promise<Object[]>} rows with lower-cased column names
+ */
+function getTemplateConfig() {
+  if (!templateConfigPromise) {
+    templateConfigPromise = fetch(TEMPLATE_CONFIG_PATH)
+      .then((resp) => (resp.ok ? resp.json() : {}))
+      .then(({ data = [] }) => data.map((row) => Object.fromEntries(
+        Object.entries(row).map(([key, value]) => [key.toLowerCase(), value]),
+      )))
+      .catch(() => []);
+  }
+  return templateConfigPromise;
+}
+
+/**
+ * Turns an authored page reference (path, AEM path or URL) into a fragment path.
+ * @param {string} ref authored reference
+ * @returns {string} fragment path without extension
+ */
+function toFragmentPath(ref) {
+  return new URL(ref, window.location).pathname
+    .replace(/^\/content\/midwives(?=\/)/, '')
+    .replace(/\.(plain\.)?html$/, '');
+}
+
+/**
+ * Resolves which fragment (e.g. nav, footer) the current page uses:
+ * its template's row in the template config, otherwise the fallback.
+ * @param {string} type fragment type, matches the config column
+ * @param {string} fallback default fragment path
+ * @returns {Promise<string>} fragment path without extension
+ */
+export async function getTemplateFragmentPath(type, fallback) {
+  const template = toClassName(getMetadata('template'));
+  if (template) {
+    const rows = await getTemplateConfig();
+    const ref = rows.find((row) => toClassName(row.template) === template)?.[type];
+    if (ref) return toFragmentPath(ref);
+  }
+  return fallback;
+}
+
+/**
+ * Fetches a fragment: /content{path} (local aem up) first, then {path} (EDS),
+ * falling back to the default fragment when the requested one doesn't exist.
+ * @param {string} path fragment path without extension
+ * @param {string} fallback default fragment path
+ * @returns {Promise<Response|null>} the ok response, or null
+ */
+export async function fetchFragmentWithFallback(path, fallback) {
+  const fetchPath = async (p) => {
+    let resp = await fetch(`/content${p}.plain.html`);
+    if (!resp.ok) resp = await fetch(`${p}.plain.html`);
+    return resp.ok ? resp : null;
+  };
+  const resp = await fetchPath(path);
+  if (resp || path === fallback) return resp;
+  return fetchPath(fallback);
+}
 
 /**
  * Gated articles (page metadata "gated: true") are only shown to visitors who
