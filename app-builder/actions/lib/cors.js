@@ -23,11 +23,16 @@ function getAllowedOrigin(origin, allowedOrigins) {
  * response and merges it with any value the action sets ("*,https://..."), which
  * browsers reject. So the action does not set it: origins are enforced server-side
  * by getAllowedOrigin (403 for other sites) and only the expose list is added here.
- * @returns {Object} CORS response headers, empty when no origin is allowed
+ * "Vary: Origin" keeps the Runtime gateway cache from serving a response cached
+ * for an allowed site to a site that should get 403.
+ * @returns {Object} CORS response headers
  */
 function corsHeaders(allowedOrigin, exposeHeaders = []) {
-  if (!allowedOrigin || !exposeHeaders.length) return {};
-  return { 'Access-Control-Expose-Headers': exposeHeaders.join(', ') };
+  const headers = { Vary: 'Origin' };
+  if (allowedOrigin && exposeHeaders.length) {
+    headers['Access-Control-Expose-Headers'] = exposeHeaders.join(', ');
+  }
+  return headers;
 }
 
 module.exports = { getAllowedOrigin, corsHeaders };
