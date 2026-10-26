@@ -19,16 +19,15 @@ function getAllowedOrigin(origin, allowedOrigins) {
 }
 
 /**
+ * I/O Runtime already adds "Access-Control-Allow-Origin: *" to every web action
+ * response and merges it with any value the action sets ("*,https://..."), which
+ * browsers reject. So the action does not set it: origins are enforced server-side
+ * by getAllowedOrigin (403 for other sites) and only the expose list is added here.
  * @returns {Object} CORS response headers, empty when no origin is allowed
  */
 function corsHeaders(allowedOrigin, exposeHeaders = []) {
-  if (!allowedOrigin) return {};
-  const headers = {
-    'Access-Control-Allow-Origin': allowedOrigin,
-    Vary: 'Origin',
-  };
-  if (exposeHeaders.length) headers['Access-Control-Expose-Headers'] = exposeHeaders.join(', ');
-  return headers;
+  if (!allowedOrigin || !exposeHeaders.length) return {};
+  return { 'Access-Control-Expose-Headers': exposeHeaders.join(', ') };
 }
 
 module.exports = { getAllowedOrigin, corsHeaders };
