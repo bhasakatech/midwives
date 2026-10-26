@@ -14,7 +14,11 @@ application:
               # users API
               USERS_API_URL: $USERS_API_URL
               USERS_API_TOKEN: $USERS_API_TOKEN
-              # add each new API's *_API_URL / *_API_TOKEN here
+              # basic-auth-test API (username/password on every request)
+              BASIC_TEST_API_URL: $BASIC_TEST_API_URL
+              BASIC_TEST_USERNAME: $BASIC_TEST_USERNAME
+              BASIC_TEST_PASSWORD: $BASIC_TEST_PASSWORD
+              # add each new API's inputs here (every *Env used in apis.js)
             annotations:
               # public endpoint for the website, no Adobe IMS login
               require-adobe-auth: false

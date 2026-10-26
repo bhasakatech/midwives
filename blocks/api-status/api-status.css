@@ -1,0 +1,42 @@
+.api-status .api-status-box {
+  padding: 24px;
+  border-left: 6px solid var(--light-color);
+  border-radius: 8px;
+  background-color: var(--background-color);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
+}
+
+.api-status .api-status-title {
+  margin: 0;
+  font-family: var(--bold-font-family);
+  font-size: var(--heading-font-size-s);
+}
+
+.api-status .api-status-detail {
+  margin: 8px 0 0;
+  font-size: var(--body-font-size-xs);
+}
+
+.api-status .api-status-ok {
+  border-left-color: #1b6b34;
+}
+
+.api-status .api-status-ok .api-status-title {
+  color: #1b6b34;
+}
+
+.api-status .api-status-ok .api-status-title::before {
+  content: '✓ ';
+}
+
+.api-status .api-status-error {
+  border-left-color: #a4161a;
+}
+
+.api-status .api-status-error .api-status-title {
+  color: #a4161a;
+}
+
+.api-status .api-status-error .api-status-title::before {
+  content: '✕ ';
+}

@@ -3,10 +3,11 @@
  *
  *   GET {action-url}/{api}?{params}     e.g. .../web/midwives/proxy/users?page=2
  *
- * Looks up {api} in apis.js, reads its upstream URL and optional token from the
+ * Looks up {api} in apis.js, reads its upstream URL and credentials from the
  * action inputs (App Builder environment variables), forwards only the allowed
- * query parameters and returns the upstream JSON unchanged, plus the headers
- * the API is allowed to expose. Secrets never reach the browser.
+ * query parameters, authenticates upstream (static token or basic, see
+ * lib/auth.js) and returns the upstream JSON unchanged, plus the headers the
+ * API is allowed to expose. Secrets never reach the browser.
  *
  * Shared inputs:
  *   ALLOWED_ORIGINS  sites allowed to call the proxy (see lib/cors.js)
@@ -16,6 +17,7 @@ const apis = require('./apis.js');
 const { getAllowedOrigin, corsHeaders } = require('../lib/cors.js');
 const { readParams } = require('../lib/params.js');
 const { respond, errorResponse } = require('../lib/response.js');
+const { getAuthHeaders, requiredInputs } = require('../lib/auth.js');
 
 const TIMEOUT_MS = 10000;
 
@@ -36,14 +38,7 @@ function buildUpstreamRequest(api, params) {
   if (url.protocol !== 'https:') throw new Error(`${api.urlEnv} must be an https URL`);
   Object.entries(readParams(params, api.params))
     .forEach(([key, value]) => url.searchParams.set(key, value));
-
-  const headers = { Accept: 'application/json' };
-  const token = api.tokenEnv ? params[api.tokenEnv] : undefined;
-  if (token) {
-    const scheme = api.authScheme === undefined ? 'Bearer' : api.authScheme;
-    headers[api.authHeader || 'Authorization'] = scheme ? `${scheme} ${token}` : token;
-  }
-  return { url, headers };
+  return { url, headers: { Accept: 'application/json', ...getAuthHeaders(api, params) } };
 }
 
 function pickHeaders(upstreamHeaders, names = []) {
@@ -72,8 +67,9 @@ async function main(params) {
   }
   if (method !== 'GET') return errorResponse(405, 'method_not_allowed', 'Only GET is supported', cors);
 
-  if (!params[api.urlEnv]) {
-    console.error(`[${name}] ${api.urlEnv} is not configured`);
+  const missing = [api.urlEnv, ...requiredInputs(api)].filter((input) => !params[input]);
+  if (missing.length) {
+    console.error(`[${name}] not configured: ${missing.join(', ')}`);
     return errorResponse(500, 'not_configured', 'Service not configured', cors);
   }
 
@@ -103,9 +99,8 @@ async function main(params) {
       'Cache-Control': api.cacheSeconds ? `private, max-age=${api.cacheSeconds}` : 'no-store',
     });
   } catch (e) {
-    const timedOut = e.name === 'TimeoutError';
     console.error(`[${name}] upstream request failed: ${e.message}`);
-    return timedOut
+    return e.name === 'TimeoutError'
       ? errorResponse(504, 'upstream_timeout', 'Upstream service timed out', cors)
       : errorResponse(502, 'upstream_error', 'Upstream service error', cors);
   }

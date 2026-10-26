@@ -89,7 +89,8 @@
         "cards-media",
         "embed-marketo",
         "table",
-        "users"
+        "users",
+        "api-status"
       ]
     }
   ]

@@ -4,8 +4,9 @@ Server-side actions for the Edge Delivery site. Not served by EDS (`app-builder/
 
 ## `proxy` action
 
-One generic, read-only proxy for every external API the site uses. Upstream URLs and tokens are App Builder
-environment variables, so they never reach the browser. The upstream JSON is returned unchanged.
+One generic, read-only proxy for every external API the site uses, public or private. Upstream URLs, tokens,
+usernames and passwords are App Builder environment variables, so they never reach the browser. The upstream
+JSON is returned unchanged.
 
 ```
 GET https://<namespace>.adobeioruntime.net/api/v1/web/midwives/proxy/<api>?<params>
@@ -13,8 +14,9 @@ GET https://<namespace>.adobeioruntime.net/api/v1/web/midwives/proxy/<api>?<para
 
 | Part | Where |
 |---|---|
-| Registered APIs, allowed params, exposed headers, cache time | `actions/proxy/apis.js` |
-| Upstream URLs and tokens | `.env` → `app.config.yaml` inputs |
+| Registered APIs, allowed params, auth type, cache time | `actions/proxy/apis.js` |
+| Upstream URLs, tokens, usernames, passwords | `.env` → `app.config.yaml` inputs |
+| Upstream authentication headers | `actions/lib/auth.js` |
 | Allowed websites (CORS) | `ALLOWED_ORIGINS` in `.env` |
 
 ### Response format
@@ -32,15 +34,28 @@ Errors always look like this:
 | 403 | `origin_not_allowed` | Called from a site not in `ALLOWED_ORIGINS` |
 | 404 | `unknown_api` | API name not in `apis.js` |
 | 405 | `method_not_allowed` | Anything other than GET |
-| 500 | `not_configured` | URL input missing, invalid or not https |
-| 502 | `upstream_error` | Upstream failed or returned an error |
+| 500 | `not_configured` | A required input is missing, or a URL is invalid or not https |
+| 502 | `upstream_error` | Upstream failed or returned an error (including 401 for wrong credentials) |
 | 504 | `upstream_timeout` | Upstream took longer than 10 s |
 
 ### Registered APIs
 
-| API | Path | Inputs | Params |
-|---|---|---|---|
-| users | `/proxy/users` | `USERS_API_URL`, `USERS_API_TOKEN` (optional) | `page`, `per_page` (max 100) |
+| API | Path | Auth | Inputs | Params |
+|---|---|---|---|---|
+| basic-auth-test | `/proxy/basic-auth-test` | basic (Postman Echo) | `BASIC_TEST_API_URL`, `BASIC_TEST_USERNAME`, `BASIC_TEST_PASSWORD` | none |
+| users | `/proxy/users` | none, or static token | `USERS_API_URL`, `USERS_API_TOKEN` (optional) | `page`, `per_page` (max 100) |
+
+`basic-auth-test` is used by the `api-status` block (site config key `basicAuthTestUrl`), `users` by the `users`
+block (site config key `usersApiUrl`).
+
+### Private APIs
+
+Two ways to authenticate upstream, set per API in `apis.js`:
+
+- **Static token / API key**: `tokenEnv: 'X_API_TOKEN'`, sent as `Authorization: Bearer <token>`.
+  Use `authHeader: 'x-api-key', authScheme: null` for APIs that want a bare key in another header.
+- **Basic (username + password)**: `auth: { type: 'basic', usernameEnv, passwordEnv }`, sent as
+  `Authorization: Basic ...` on every request.
 
 ## Adding a new API
 
@@ -58,6 +73,7 @@ Example: a `products` API.
      cacheSeconds: 300,
    },
    ```
+   For a private API, use `tokenEnv` or `auth` (see Private APIs).
 2. **Declare its inputs** in `app.config.yaml` under `proxy.inputs`:
    ```yaml
    PRODUCTS_API_URL: $PRODUCTS_API_URL
