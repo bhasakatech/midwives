@@ -1,0 +1,11 @@
+{
+  "variantName": "users",
+  "baseBlock": "users",
+  "canonicalModel": "users",
+  "visualCharacteristics": "Responsive grid of user cards (1/2/3/4 columns at mobile/600px/900px/1200px). Each card shows an initials avatar, the user's name as a heading, email as a mailto link, gender, and an active/inactive status badge.",
+  "contentPattern": "Single row, single cell with an optional API URL (plain text or link). Data is fetched client-side from the URL (default https://gorest.co.in/public/v2/users), which must return a JSON array of {id, name, email, gender, status}.",
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Use to list users from a public JSON API as cards. Leave the cell empty to use the default GoRest endpoint.",
+  "reuseGuidance": "Reuse for any endpoint returning the same user record shape. For other data shapes create a new block."
+}

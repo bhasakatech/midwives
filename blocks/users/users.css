@@ -1,0 +1,163 @@
+.users .users-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.users .users-card {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 24px;
+  border: 1px solid var(--light-color);
+  border-radius: 8px;
+  background-color: var(--background-color);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
+}
+
+.users .users-card-avatar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--brand-purple);
+  color: var(--brand-white);
+  font-family: var(--bold-font-family);
+  font-size: var(--body-font-size-xs);
+}
+
+.users .users-card-body {
+  flex: 1;
+  min-width: 0;
+  padding-top: 24px;
+}
+
+.users .users-card-name {
+  margin: 0 0 8px;
+  font-size: var(--heading-font-size-s);
+  overflow-wrap: anywhere;
+}
+
+.users .users-card-details {
+  margin: 0;
+  font-size: var(--body-font-size-xs);
+}
+
+.users .users-card-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.users .users-card-detail dt {
+  color: var(--brand-grey);
+}
+
+.users .users-card-detail dt::after {
+  content: ':';
+}
+
+.users .users-card-detail dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-transform: capitalize;
+}
+
+.users .users-card-email {
+  text-transform: none;
+}
+
+.users .users-card-status {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 14px;
+  line-height: 1.5;
+  text-transform: capitalize;
+}
+
+.users .users-card-status-active {
+  background-color: #e3f4e8;
+  color: #1b6b34;
+}
+
+.users .users-card-status-inactive {
+  background-color: #eee;
+  color: var(--brand-grey);
+}
+
+.users .users-card-status-unknown {
+  background-color: var(--light-color);
+  color: var(--dark-color);
+}
+
+.users .users-message {
+  margin: 0;
+  padding: 24px;
+  border-radius: 8px;
+  background-color: var(--light-color);
+  text-align: center;
+}
+
+.users .users-error {
+  color: #a4161a;
+}
+
+.users .users-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.users .users-count {
+  margin: 0;
+  color: var(--brand-grey);
+  font-size: var(--body-font-size-xs);
+}
+
+.users .users-load-more {
+  margin: 0;
+}
+
+.users .users-load-more[hidden] {
+  display: none;
+}
+
+.users .users-status-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (width >= 600px) {
+  .users .users-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width >= 900px) {
+  .users .users-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (width >= 1200px) {
+  .users .users-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
