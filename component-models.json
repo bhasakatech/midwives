@@ -701,18 +701,5 @@
         "label": "Column4"
       }
     ]
-  },
-  {
-    "id": "users",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "apiUrl",
-        "value": "",
-        "label": "API URL",
-        "description": "Optional JSON endpoint returning a list of users. Leave empty to use the usersApiUrl site configuration variable."
-      }
-    ]
   }
 ]

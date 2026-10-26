@@ -3,9 +3,9 @@
   "baseBlock": "users",
   "canonicalModel": "users",
   "visualCharacteristics": "Responsive grid of user cards (1/2/3/4 columns at mobile/600px/900px/1200px). Each card shows an initials avatar, the user's name as a heading, email as a mailto link, gender, and an active/inactive status badge.",
-  "contentPattern": "Single row, single cell with an optional API URL (plain text or link). Data is fetched client-side from the URL (or, when empty, the usersApiUrl variable in the public site configuration), which must return a JSON array of {id, name, email, gender, status}.",
+  "contentPattern": "Empty block, no authored fields. Data is fetched client-side from the usersApiUrl variable in the public site configuration (normally the App Builder proxy), which must return a JSON array of {id, name, email, gender, status}.",
   "options": [],
   "memberVariantIds": [],
-  "usage": "Use to list users from a public JSON API as cards. Leave the cell empty to use the usersApiUrl site configuration variable.",
+  "usage": "Add the block to a page; there is nothing to author. The API address is managed in the site configuration (usersApiUrl) and App Builder.",
   "reuseGuidance": "Reuse for any endpoint returning the same user record shape. For other data shapes create a new block."
 }
