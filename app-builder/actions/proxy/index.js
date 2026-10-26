@@ -98,7 +98,9 @@ async function main(params) {
     return respond(200, data, {
       ...cors,
       ...pickHeaders(resp.headers, api.exposeHeaders),
-      'Cache-Control': api.cacheSeconds ? `public, max-age=${api.cacheSeconds}` : 'no-store',
+      // "private": only the visitor's browser caches it; the shared Runtime gateway cache
+      // would otherwise serve this response to other origins without the origin check
+      'Cache-Control': api.cacheSeconds ? `private, max-age=${api.cacheSeconds}` : 'no-store',
     });
   } catch (e) {
     const timedOut = e.name === 'TimeoutError';

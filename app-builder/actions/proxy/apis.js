@@ -13,7 +13,7 @@
  *                    { type: 'string', maxLength, pattern, default }
  *                  invalid values fall back to the default, or are dropped when there is none
  *   exposeHeaders  (optional) upstream response headers passed back to the browser
- *   cacheSeconds   (optional) browser/CDN cache time for successful responses, default 0
+ *   cacheSeconds   (optional) browser-only cache time for successful responses, default 0
  *
  * Every urlEnv/tokenEnv must also be declared under the action's inputs in app.config.yaml.
  */
