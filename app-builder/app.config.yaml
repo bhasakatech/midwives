@@ -1,0 +1,22 @@
+application:
+  runtimeManifest:
+    packages:
+      midwives:
+        license: Apache-2.0
+        actions:
+          # generic API proxy: GET .../web/midwives/proxy/{api}, APIs listed in actions/proxy/apis.js
+          proxy:
+            function: actions/proxy/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              ALLOWED_ORIGINS: $ALLOWED_ORIGINS
+              # users API
+              USERS_API_URL: $USERS_API_URL
+              USERS_API_TOKEN: $USERS_API_TOKEN
+              # add each new API's *_API_URL / *_API_TOKEN here
+            annotations:
+              # public endpoint for the website, no Adobe IMS login
+              require-adobe-auth: false
+              # inputs are fixed: callers cannot override URLs or tokens
+              final: true

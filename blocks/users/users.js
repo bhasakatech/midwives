@@ -22,17 +22,6 @@ function toHttpUrl(raw) {
 }
 
 /**
- * Reads the authored API URL from the first cell (link or plain text).
- * @param {Element} block The block element
- * @returns {string|null} the authored URL, or null when missing or not http(s)
- */
-function getAuthoredUrl(block) {
-  const cell = block.querySelector(':scope > div > div');
-  const link = cell?.querySelector('a[href]');
-  return toHttpUrl(link ? link.getAttribute('href') : cell?.textContent);
-}
-
-/**
  * Picks a heading level one below the nearest preceding heading on the page.
  * @param {Element} block The block element
  * @returns {number} heading level between 2 and 6
@@ -155,7 +144,6 @@ async function fetchPage(apiUrl, page) {
  * @param {Element} block The block element
  */
 export default async function decorate(block) {
-  const authoredUrl = getAuthoredUrl(block);
   const level = getHeadingLevel(block);
 
   const status = createEl('div', 'users-status');
@@ -172,8 +160,8 @@ export default async function decorate(block) {
   loadMore.type = 'button';
   footer.append(count, loadMore);
 
-  // block field first, then the site configuration variable
-  const apiUrl = authoredUrl || toHttpUrl(await getSiteConfigValue(CONFIG_KEY));
+  // the API URL comes only from the site configuration, never from authored content
+  const apiUrl = toHttpUrl(await getSiteConfigValue(CONFIG_KEY));
   if (!apiUrl) {
     // eslint-disable-next-line no-console
     console.warn(`users: no API URL, set "${CONFIG_KEY}" in the site configuration (public.custom)`);

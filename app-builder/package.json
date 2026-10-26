@@ -1,0 +1,12 @@
+{
+  "name": "midwives-app-builder",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App Builder actions for the Midwives Edge Delivery site",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "deploy": "aio app deploy"
+  }
+}
