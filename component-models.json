@@ -711,7 +711,7 @@
         "name": "apiUrl",
         "value": "",
         "label": "API URL",
-        "description": "Optional JSON endpoint returning a list of users. Defaults to https://gorest.co.in/public/v2/users"
+        "description": "Optional JSON endpoint returning a list of users. Leave empty to use the usersApiUrl site configuration variable."
       }
     ]
   }

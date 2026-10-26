@@ -1,25 +1,35 @@
-const DEFAULT_API_URL = 'https://gorest.co.in/public/v2/users';
+import { getSiteConfigValue } from '../../scripts/scripts.js';
+
+// custom variable in the public site configuration (/config.json) holding the API URL
+const CONFIG_KEY = 'usersApiUrl';
 const PAGE_SIZE = 20;
 
 /**
- * Reads the authored API URL from the first cell (link or plain text).
- * Falls back to the default endpoint when missing or not http(s).
- * @param {Element} block The block element
- * @returns {string} the API URL to fetch
+ * Returns the value as an absolute http(s) URL, or null when it isn't one.
+ * @param {string} raw candidate URL
+ * @returns {string|null}
  */
-function getApiUrl(block) {
-  const cell = block.querySelector(':scope > div > div');
-  if (!cell) return DEFAULT_API_URL;
-  const link = cell.querySelector('a[href]');
-  const raw = (link ? link.getAttribute('href') : cell.textContent).trim();
-  if (!raw) return DEFAULT_API_URL;
+function toHttpUrl(raw) {
+  const value = String(raw ?? '').trim();
+  if (!value) return null;
   try {
-    const url = new URL(raw, window.location.href);
+    const url = new URL(value, window.location.href);
     if (url.protocol === 'https:' || url.protocol === 'http:') return url.href;
   } catch (e) {
-    // invalid URL, use default
+    // invalid URL
   }
-  return DEFAULT_API_URL;
+  return null;
+}
+
+/**
+ * Reads the authored API URL from the first cell (link or plain text).
+ * @param {Element} block The block element
+ * @returns {string|null} the authored URL, or null when missing or not http(s)
+ */
+function getAuthoredUrl(block) {
+  const cell = block.querySelector(':scope > div > div');
+  const link = cell?.querySelector('a[href]');
+  return toHttpUrl(link ? link.getAttribute('href') : cell?.textContent);
 }
 
 /**
@@ -145,7 +155,7 @@ async function fetchPage(apiUrl, page) {
  * @param {Element} block The block element
  */
 export default async function decorate(block) {
-  const apiUrl = getApiUrl(block);
+  const authoredUrl = getAuthoredUrl(block);
   const level = getHeadingLevel(block);
 
   const status = createEl('div', 'users-status');
@@ -161,6 +171,16 @@ export default async function decorate(block) {
   const loadMore = createEl('button', 'button secondary users-load-more', 'Load more');
   loadMore.type = 'button';
   footer.append(count, loadMore);
+
+  // block field first, then the site configuration variable
+  const apiUrl = authoredUrl || toHttpUrl(await getSiteConfigValue(CONFIG_KEY));
+  if (!apiUrl) {
+    // eslint-disable-next-line no-console
+    console.warn(`users: no API URL, set "${CONFIG_KEY}" in the site configuration (public.custom)`);
+    showMessage(status, 'users-error', 'Sorry, users could not be loaded. Please try again later.');
+    block.removeAttribute('aria-busy');
+    return;
+  }
 
   let page = 1;
   let pages = 1;

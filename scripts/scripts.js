@@ -79,6 +79,27 @@ export async function fetchFragmentWithFallback(path, fallback) {
   return fetchPath(fallback);
 }
 
+// public site configuration from the configuration service (public.json), served at /config.json
+const SITE_CONFIG_PATH = '/config.json';
+let siteConfigPromise;
+
+/**
+ * Reads a custom variable from the public site configuration (the "custom" object).
+ * Never store secrets there: /config.json is readable by everyone.
+ * @param {string} key custom variable name
+ * @returns {Promise<string|undefined>} the value, or undefined when not set
+ */
+export async function getSiteConfigValue(key) {
+  if (!siteConfigPromise) {
+    siteConfigPromise = fetch(SITE_CONFIG_PATH)
+      .then((resp) => (resp.ok ? resp.json() : {}))
+      .then((config) => config?.public?.custom || {})
+      .catch(() => ({}));
+  }
+  const custom = await siteConfigPromise;
+  return custom[key];
+}
+
 /**
  * Gated articles (page metadata "gated: true") are only shown to visitors who
  * completed the sign-up form (cookie set by the embed-marketo "gated" block);
