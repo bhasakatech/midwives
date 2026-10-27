@@ -27,7 +27,7 @@
           "valueType": "string",
           "name": "template",
           "label": "Template",
-          "description": "Template name, e.g. article-type. Must match a row in the template-config sheet."
+          "description": "Template name, e.g. article-type. Must match an entry in the site configuration (custom.templates)."
         }
       ]
     }

@@ -13,25 +13,30 @@ import {
   toClassName,
 } from './aem.js';
 
-// author-managed sheet mapping a page template to its fragments (columns: template, nav, footer)
-const TEMPLATE_CONFIG_PATH = '/template-config.json';
-let templateConfigPromise;
+// public site configuration from the configuration service (public.json), served at /config.json
+const SITE_CONFIG_PATH = '/config.json';
+let siteConfigPromise;
 
 /**
- * Loads the template config sheet once per page view.
- * @returns {Promise<Object[]>} rows with lower-cased column names
+ * Reads a custom variable from the public site configuration (the "custom" object).
+ * Never store secrets there: /config.json is readable by everyone.
+ * @param {string} key custom variable name
+ * @returns {Promise<*>} the value, or undefined when not set
  */
-function getTemplateConfig() {
-  if (!templateConfigPromise) {
-    templateConfigPromise = fetch(TEMPLATE_CONFIG_PATH)
+export async function getSiteConfigValue(key) {
+  if (!siteConfigPromise) {
+    siteConfigPromise = fetch(SITE_CONFIG_PATH)
       .then((resp) => (resp.ok ? resp.json() : {}))
-      .then(({ data = [] }) => data.map((row) => Object.fromEntries(
-        Object.entries(row).map(([key, value]) => [key.toLowerCase(), value]),
-      )))
-      .catch(() => []);
+      .then((config) => config?.public?.custom || {})
+      .catch(() => ({}));
   }
-  return templateConfigPromise;
+  const custom = await siteConfigPromise;
+  return custom[key];
 }
+
+// site configuration key mapping a page template to its fragments:
+// public.custom.templates = { "<template>": { "nav": "/nav/...", "footer": "/footer/..." } }
+const TEMPLATES_CONFIG_KEY = 'templates';
 
 /**
  * Turns an authored page reference (path, AEM path or URL) into a fragment path.
@@ -46,17 +51,21 @@ function toFragmentPath(ref) {
 
 /**
  * Resolves which fragment (e.g. nav, footer) the current page uses:
- * its template's row in the template config, otherwise the fallback.
- * @param {string} type fragment type, matches the config column
+ * its template's entry in the site configuration, otherwise the fallback.
+ * @param {string} type fragment type, a property of the template entry
  * @param {string} fallback default fragment path
  * @returns {Promise<string>} fragment path without extension
  */
 export async function getTemplateFragmentPath(type, fallback) {
   const template = toClassName(getMetadata('template'));
   if (template) {
-    const rows = await getTemplateConfig();
-    const ref = rows.find((row) => toClassName(row.template) === template)?.[type];
-    if (ref) return toFragmentPath(ref);
+    const templates = await getSiteConfigValue(TEMPLATES_CONFIG_KEY);
+    if (templates && typeof templates === 'object') {
+      const entry = Object.entries(templates)
+        .find(([name]) => toClassName(name) === template)?.[1];
+      const ref = entry?.[type];
+      if (typeof ref === 'string' && ref.trim()) return toFragmentPath(ref.trim());
+    }
   }
   return fallback;
 }
@@ -77,27 +86,6 @@ export async function fetchFragmentWithFallback(path, fallback) {
   const resp = await fetchPath(path);
   if (resp || path === fallback) return resp;
   return fetchPath(fallback);
-}
-
-// public site configuration from the configuration service (public.json), served at /config.json
-const SITE_CONFIG_PATH = '/config.json';
-let siteConfigPromise;
-
-/**
- * Reads a custom variable from the public site configuration (the "custom" object).
- * Never store secrets there: /config.json is readable by everyone.
- * @param {string} key custom variable name
- * @returns {Promise<string|undefined>} the value, or undefined when not set
- */
-export async function getSiteConfigValue(key) {
-  if (!siteConfigPromise) {
-    siteConfigPromise = fetch(SITE_CONFIG_PATH)
-      .then((resp) => (resp.ok ? resp.json() : {}))
-      .then((config) => config?.public?.custom || {})
-      .catch(() => ({}));
-  }
-  const custom = await siteConfigPromise;
-  return custom[key];
 }
 
 /**
