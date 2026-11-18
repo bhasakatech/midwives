@@ -102,20 +102,52 @@ async function loadConfiguredScripts() {
 
 /**
  * Evidon (Crownpeak) cookie consent — same tag and script order as the source site.
+ * Settings come from the site configuration (public.custom.cookieConsent); any missing
+ * or invalid value falls back to the defaults below (the source site's setup):
+ *
+ * "cookieConsent": { "enabled": true, "companyId": "8523", "settingsDomain": "gehealthcare",
+ *                    "test": false, "brandColor": "#6022A6" }
+ *
+ * - enabled: false removes the banner; scripts that wait for consent then never load
+ * - test: true loads Evidon's test settings (non-production testing)
+ * Banner texts, categories and languages are managed in the Evidon/Crownpeak console.
  * Settings are published for GE's "gehealthcare" domain only, so the consent UI is
  * functional on GE's production domain; elsewhere the API loads but shows no dialog.
  */
-const EVIDON_COMPANY_ID = 8523;
-const EVIDON_SETTINGS_DOMAIN = 'gehealthcare';
+const COOKIE_CONSENT_CONFIG_KEY = 'cookieConsent';
+const EVIDON_DEFAULTS = {
+  companyId: '8523',
+  settingsDomain: 'gehealthcare',
+  brandColor: '#6022A6',
+};
 const EVIDON_CDN = 'https://c.evidon.com/';
+
+function getEvidonSettings(config) {
+  const cfg = config && typeof config === 'object' ? config : {};
+  const pick = (key, pattern) => {
+    const value = String(cfg[key] ?? '').trim();
+    return pattern.test(value) ? value : EVIDON_DEFAULTS[key];
+  };
+  return {
+    enabled: isEnabled(cfg.enabled),
+    test: cfg.test === true || String(cfg.test).toLowerCase() === 'true',
+    companyId: pick('companyId', /^\d+$/),
+    settingsDomain: pick('settingsDomain', /^[a-z0-9.-]+$/i),
+    brandColor: pick('brandColor', /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i),
+  };
+}
 
 async function loadEvidon() {
   if (window.evidon?.notice) return;
+  const {
+    enabled, test, companyId, settingsDomain, brandColor,
+  } = getEvidonSettings(await getSiteConfigValue(COOKIE_CONSENT_CONFIG_KEY));
+  if (!enabled) return;
   const noticeCdn = `${EVIDON_CDN}sitenotice/`;
 
   window.evidon = {
-    id: EVIDON_COMPANY_ID,
-    test: false,
+    id: Number(companyId),
+    test,
     // fires when the visitor accepts cookies, and on later visits if they already did
     priorConsentCallback: () => grantConsent(),
     closeCallback: () => {},
@@ -127,8 +159,8 @@ async function loadEvidon() {
 
   // brand colors for the consent UI (as on the source)
   const style = document.createElement('style');
-  style.textContent = '.slideron{ background-color: #6022A6 !important; }'
-    + '.evidon-prefdiag-message a{ color: #6022A6 !important; }';
+  style.textContent = `.slideron{ background-color: ${brandColor} !important; }`
+    + `.evidon-prefdiag-message a{ color: ${brandColor} !important; }`;
   document.head.append(style);
 
   const attrs = (id) => ({ id, charset: 'utf-8' });
@@ -136,9 +168,9 @@ async function loadEvidon() {
   await loadScript(`${noticeCdn}evidon-sitenotice-tag.js`, attrs('evidon-notice'));
   await Promise.all([
     loadScript(`${EVIDON_CDN}geo/country.js`, attrs('evidon-location')),
-    loadScript(`${noticeCdn}${EVIDON_COMPANY_ID}/snthemes.js`, attrs('evidon-themes')),
+    loadScript(`${noticeCdn}${companyId}/snthemes.js`, attrs('evidon-themes')),
     loadScript(
-      `${noticeCdn}${EVIDON_COMPANY_ID}/${EVIDON_SETTINGS_DOMAIN}/settingsV2.js`,
+      `${noticeCdn}${companyId}/${settingsDomain}${test ? '/test' : ''}/settingsV2.js`,
       attrs('evidon-settings'),
     ),
   ]);
