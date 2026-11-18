@@ -28,6 +28,13 @@
           "name": "template",
           "label": "Template",
           "description": "Template name, e.g. article-type. Must match an entry in the site configuration (custom.templates)."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "json-ld",
+          "label": "JSON-LD (Structured Data)",
+          "description": "Schema.org JSON-LD for this page, e.g. {\"@context\":\"https://schema.org\",\"@type\":\"WebSite\",\"name\":\"Bloom Midwives\",\"url\":\"https://midwives.gehealthcare.com/\"}. Rendered as a <script type=\"application/ld+json\"> tag in the page head."
         }
       ]
     }

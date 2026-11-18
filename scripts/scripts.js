@@ -215,11 +215,34 @@ export function decorateMain(main) {
 }
 
 /**
+ * Page metadata "json-ld" (page properties) is rendered by Edge Delivery as a
+ * <script type="application/ld+json"> in the head. If it arrives as a plain
+ * <meta name="json-ld"> instead (older pipeline), turn it into the script tag.
+ */
+function loadJsonLd() {
+  const meta = document.head.querySelector('meta[name="json-ld"]');
+  if (!meta) return;
+  const value = meta.content?.trim();
+  meta.remove();
+  if (!value || document.head.querySelector('script[type="application/ld+json"]')) return;
+  try {
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(JSON.parse(value));
+    document.head.append(script);
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn('Invalid JSON-LD in page metadata', e);
+  }
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
   if (redirectIfGated()) return;
+  loadJsonLd();
   document.documentElement.lang = 'fr';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
