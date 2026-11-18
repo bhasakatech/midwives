@@ -2,6 +2,8 @@
 import { loadScript } from './aem.js';
 // eslint-disable-next-line import/no-cycle
 import { getSiteConfigValue } from './scripts.js';
+// eslint-disable-next-line import/no-cycle
+import initExitPopup from './exit-popup.js';
 
 /*
  * Configurable third-party scripts, loaded on every page in the delayed phase.
@@ -179,3 +181,5 @@ async function loadEvidon() {
 // eslint-disable-next-line no-console
 loadEvidon().catch((e) => console.warn('Evidon consent failed to load', e));
 loadConfiguredScripts();
+// eslint-disable-next-line no-console
+initExitPopup().catch((e) => console.warn('exit popup failed', e));

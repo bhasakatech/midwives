@@ -40,10 +40,16 @@ function getCookie(name) {
   return match ? decodeURIComponent(match.slice(name.length + 1)) : '';
 }
 
+/**
+ * Sets a cookie for the whole site.
+ * @param {string} name
+ * @param {string} value
+ * @param {number} [days] lifetime; omit for a session cookie (until the browser is closed)
+ */
 function setCookie(name, value, days) {
-  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  const expires = days ? `; expires=${new Date(Date.now() + days * 864e5).toUTCString()}` : '';
   const secure = window.location.protocol === 'https:' ? '; Secure' : '';
-  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax${secure}`;
+  document.cookie = `${name}=${encodeURIComponent(value)}${expires}; path=/; SameSite=Lax${secure}`;
 }
 
 /**
@@ -273,7 +279,8 @@ function buildGate(config, onYes) {
   no.className = 'button secondary';
   no.href = config.noUrl;
   no.textContent = config.noLabel;
-  no.addEventListener('click', () => setCookie(PRO_COOKIE, 'noPro', 180));
+  // as on the source: the "no" answer is only kept until the browser is closed
+  no.addEventListener('click', () => setCookie(PRO_COOKIE, 'noPro'));
 
   actions.append(yes, no);
   gate.append(actions);

@@ -1,0 +1,59 @@
+/* newsletter exit popup (scripts/exit-popup.js), styled after the source site */
+dialog.exit-popup {
+  box-sizing: border-box;
+  width: calc(100% - 32px);
+  max-width: 550px;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background-color: var(--brand-purple);
+  color: var(--brand-white);
+}
+
+dialog.exit-popup:focus {
+  outline: none;
+}
+
+dialog.exit-popup::backdrop {
+  background-color: rgb(0 0 0 / 80%);
+}
+
+dialog.exit-popup .exit-popup-content {
+  padding: 24px;
+}
+
+dialog.exit-popup .exit-popup-title {
+  margin: 0 0 20px;
+  font-family: var(--bold-font-family);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--brand-white);
+}
+
+dialog.exit-popup .exit-popup-text {
+  margin: 0 0 20px;
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--brand-white);
+}
+
+dialog.exit-popup .exit-popup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 12px;
+}
+
+dialog.exit-popup .exit-popup-actions .button {
+  margin: 0;
+  font-size: 16px;
+}
+
+@media (width >= 600px) {
+  dialog.exit-popup .exit-popup-content {
+    padding: 35px;
+  }
+}
