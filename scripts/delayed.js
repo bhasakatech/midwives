@@ -1,5 +1,27 @@
 // add delayed functionality here
 import { loadScript } from './aem.js';
+// eslint-disable-next-line import/no-cycle
+import { getSiteConfigValue } from './scripts.js';
+
+/**
+ * Hotjar — site ID comes from the site configuration (public.custom.hotjarId),
+ * so admins can change or remove it (removing it switches Hotjar off) without
+ * a code change. Only loaded once the visitor has given cookie consent.
+ */
+const HOTJAR_CONFIG_KEY = 'hotjarId';
+const HOTJAR_SNIPPET_VERSION = 6;
+const hotjarIdPromise = getSiteConfigValue(HOTJAR_CONFIG_KEY);
+
+async function loadHotjar() {
+  // eslint-disable-next-line no-underscore-dangle
+  if (window.hj && window._hjSettings) return;
+  const hjid = String((await hotjarIdPromise) ?? '').trim();
+  if (!/^\d+$/.test(hjid)) return;
+  window.hj = window.hj || function hj(...args) { (window.hj.q = window.hj.q || []).push(args); };
+  // eslint-disable-next-line no-underscore-dangle
+  window._hjSettings = { hjid: Number(hjid), hjsv: HOTJAR_SNIPPET_VERSION };
+  await loadScript(`https://static.hotjar.com/c/hotjar-${hjid}.js?sv=${HOTJAR_SNIPPET_VERSION}`, { async: '' });
+}
 
 /**
  * Evidon (Crownpeak) cookie consent — same tag and script order as the source site.
@@ -17,7 +39,11 @@ async function loadEvidon() {
   window.evidon = {
     id: EVIDON_COMPANY_ID,
     test: false,
-    priorConsentCallback: () => {},
+    // fires when the visitor accepts cookies, and on later visits if they already did
+    priorConsentCallback: () => {
+      // eslint-disable-next-line no-console
+      loadHotjar().catch((e) => console.warn('Hotjar failed to load', e));
+    },
     closeCallback: () => {},
     consentWithdrawnCallback: () => {},
     consentDeclinedCallback: () => {
