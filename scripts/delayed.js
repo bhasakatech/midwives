@@ -112,9 +112,12 @@ async function loadConfiguredScripts() {
  *
  * - enabled: false removes the banner; scripts that wait for consent then never load
  * - test: true loads Evidon's test settings (non-production testing)
+ * - testDomain: e.g. "midwives.gehealthcare.com/fr-fr/" — only on preview hosts (localhost,
+ *   *.aem.page, *.aem.live), Evidon is told the page is on that domain so the real banner
+ *   shows for testing. Never applied on any other host; remove it to switch it off.
  * Banner texts, categories and languages are managed in the Evidon/Crownpeak console.
- * Settings are published for GE's "gehealthcare" domain only, so the consent UI is
- * functional on GE's production domain; elsewhere the API loads but shows no dialog.
+ * Evidon only shows the banner on domains registered in GE's account (gehealthcare.*),
+ * so on preview hosts the API loads but shows no dialog unless testDomain is set.
  */
 const COOKIE_CONSENT_CONFIG_KEY = 'cookieConsent';
 const EVIDON_DEFAULTS = {
@@ -136,15 +139,57 @@ function getEvidonSettings(config) {
     companyId: pick('companyId', /^\d+$/),
     settingsDomain: pick('settingsDomain', /^[a-z0-9.-]+$/i),
     brandColor: pick('brandColor', /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i),
+    testDomain: /^[a-z0-9.-]+\.[a-z]{2,}(?:\/[\w\-/]*)?$/i.test(String(cfg.testDomain ?? '').trim())
+      ? String(cfg.testDomain).trim() : null,
   };
+}
+
+/**
+ * "Préférences de cookies" links reopen the Evidon preferences window (as on the source,
+ * where the footer link calls evidon.notice.showOptions()). Authors link to
+ * #cookie-preferences; a "#" link whose text mentions cookies works too.
+ */
+function initCookiePreferenceLinks() {
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest?.('a[href]');
+    if (!link) return;
+    const href = link.getAttribute('href').trim();
+    const isPrefsLink = href.endsWith('#cookie-preferences')
+      || (href === '#' && /cookie/i.test(link.textContent));
+    if (!isPrefsLink || typeof window.evidon?.notice?.showOptions !== 'function') return;
+    e.preventDefault();
+    window.evidon.notice.showOptions();
+  });
+}
+
+const isPreviewHost = (host) => host === 'localhost' || /\.aem\.(page|live)$/.test(host);
+
+/**
+ * Testing only: makes Evidon treat a preview page as being on a registered GE domain.
+ * Waits for Evidon to have read its settings, then switches the domain (Evidon then
+ * reloads the matching settings and shows the banner).
+ */
+async function applyEvidonTestDomain(testDomain) {
+  for (let i = 0; i < 50; i += 1) {
+    const notice = window.evidon?.notice;
+    if (notice?.settings && typeof notice.setDomain === 'function') {
+      notice.setDomain(testDomain);
+      // eslint-disable-next-line no-console
+      console.info(`Evidon test mode: banner shown as on ${testDomain}`);
+      return;
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise((resolve) => { setTimeout(resolve, 200); });
+  }
 }
 
 async function loadEvidon() {
   if (window.evidon?.notice) return;
   const {
-    enabled, test, companyId, settingsDomain, brandColor,
+    enabled, test, companyId, settingsDomain, brandColor, testDomain,
   } = getEvidonSettings(await getSiteConfigValue(COOKIE_CONSENT_CONFIG_KEY));
   if (!enabled) return;
+  initCookiePreferenceLinks();
   const noticeCdn = `${EVIDON_CDN}sitenotice/`;
 
   window.evidon = {
@@ -176,6 +221,9 @@ async function loadEvidon() {
       attrs('evidon-settings'),
     ),
   ]);
+  if (testDomain && isPreviewHost(window.location.hostname)) {
+    await applyEvidonTestDomain(testDomain);
+  }
 }
 
 // eslint-disable-next-line no-console
