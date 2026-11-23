@@ -34,7 +34,7 @@
           "valueType": "string",
           "name": "json-ld",
           "label": "JSON-LD (Structured Data)",
-          "description": "Schema.org JSON-LD for this page, e.g. {\"@context\":\"https://schema.org\",\"@type\":\"WebSite\",\"name\":\"Bloom Midwives\",\"url\":\"https://midwives.gehealthcare.com/\"}. Rendered as a <script type=\"application/ld+json\"> tag in the page head."
+          "description": "Optional. Site-wide JSON-LD (e.g. the WebSite schema) is authored once in the bulk metadata sheet (/content/midwives/metadata, row /** with a json-ld column); only fill this in for page-specific structured data, it replaces the site-wide value on this page. Rendered as a <script type=\"application/ld+json\"> tag in the page head."
         }
       ]
     }
