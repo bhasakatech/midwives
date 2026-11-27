@@ -7,3 +7,4 @@ package-lock.json
 test/*
 _*
 app-builder/* 
+tools/content-fragment-overlay/*

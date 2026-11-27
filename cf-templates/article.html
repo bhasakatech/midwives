@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+  Mustache template used by the json2html overlay to publish "Article" content
+  fragments (/content/dam/midwives/articles/**) as Edge Delivery pages (/articles/**).
+  Data: AEM Assets HTTP API JSON, e.g. /api/assets/midwives/articles/<name>.json
+  Fields of the Article model: title, author, publishDate, image, summary, body
+  See https://www.aem.live/developer/content-fragment-overlay
+-->
+<html>
+  <head>
+    <title>{{properties.elements.title.value}}</title>
+  </head>
+  <body>
+    <header></header>
+    <main>
+      <div>
+        <h1>{{properties.elements.title.value}}</h1>
+        {{#properties.elements.summary.value}}
+        <p>{{properties.elements.summary.value}}</p>
+        {{/properties.elements.summary.value}}
+        {{#properties.elements.author.value}}
+        <p><strong>Auteur :</strong> {{properties.elements.author.value}}</p>
+        {{/properties.elements.author.value}}
+        {{#properties.elements.image.value}}
+        <p>
+          <picture>
+            <img src="{{{properties.elements.image.value}}}" alt="{{properties.elements.title.value}}">
+          </picture>
+        </p>
+        {{/properties.elements.image.value}}
+        {{{properties.elements.body.value}}}
+      </div>
+      <div>
+        <div class="metadata">
+          <div>
+            <div>Title</div>
+            <div>{{properties.elements.title.value}}</div>
+          </div>
+          {{#properties.elements.summary.value}}
+          <div>
+            <div>Description</div>
+            <div>{{properties.elements.summary.value}}</div>
+          </div>
+          {{/properties.elements.summary.value}}
+          {{#properties.elements.image.value}}
+          <div>
+            <div>Image</div>
+            <div>
+              <picture>
+                <img src="{{{properties.elements.image.value}}}" alt="{{properties.elements.title.value}}">
+              </picture>
+            </div>
+          </div>
+          {{/properties.elements.image.value}}
+          {{#properties.elements.author.value}}
+          <div>
+            <div>Author</div>
+            <div>{{properties.elements.author.value}}</div>
+          </div>
+          {{/properties.elements.author.value}}
+          {{#properties.elements.publishDate.value}}
+          <div>
+            <div>Published Time</div>
+            <div>{{properties.elements.publishDate.value}}</div>
+          </div>
+          {{/properties.elements.publishDate.value}}
+        </div>
+      </div>
+    </main>
+    <footer></footer>
+  </body>
+</html>

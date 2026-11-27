@@ -2,7 +2,8 @@
   "mappings": [
     "/content/midwives/:/",
     "/content/midwives/metadata:/metadata.json",
-    "/content/midwives/template-config:/template-config.json"
+    "/content/midwives/template-config:/template-config.json",
+    "/content/dam/midwives/articles/:/articles/"
   ],
   "includes": [
     "/content/midwives/",

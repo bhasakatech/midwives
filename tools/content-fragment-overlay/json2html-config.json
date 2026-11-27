@@ -1,0 +1,16 @@
+[
+  {
+    "path": "/articles/",
+    "endpoint": "https://author-p139816-e1420456.adobeaemcloud.com/api/assets/midwives/articles/{{id}}.json",
+    "regex": "/(?<=\\/articles\\/)(.+)$/",
+    "template": "/cf-templates/article.html",
+    "relativeURLPrefix": "https://publish-p139816-e1420456.adobeaemcloud.com",
+    "useAEMMapping": true,
+    "headers": {
+      "Accept": "application/json"
+    },
+    "forwardHeaders": [
+      "Authorization"
+    ]
+  }
+]
